@@ -1,4 +1,5 @@
-﻿using CtciCsharp;
+﻿using System;
+using CtciCsharp;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace CtciCsharpTest
@@ -73,12 +74,83 @@ namespace CtciCsharpTest
     [TestClass]
     public class Q03_URLify_Tests
     {
-        Ch01 _c = new Ch01();
+        Ch01 C = new Ch01();
+
+        private string _input;
+        private string _expected;
+
+        private void Verify()
+        {
+            if (_input == null || _expected == null)
+            {
+                throw new ArgumentNullException();
+            }
+            if (_input.Length < _expected.Length)
+            {
+                throw new ArgumentOutOfRangeException();
+            }
+
+            char[] inputArray = _input.ToCharArray();
+            char[] expectedArray = _expected.ToCharArray();
+
+            int trueLength = inputArray.Length;
+            while (trueLength > 0 && Char.IsWhiteSpace(inputArray[trueLength-1]))
+                trueLength--;
+
+            C.Q03_URLify(inputArray, trueLength);
+
+            Assert.AreEqual(expectedArray.Length, inputArray.Length);
+            for (int i = 0; i < expectedArray.Length; i++)
+            {
+                Assert.AreEqual(expectedArray[i], inputArray[i]);
+            }
+        }
+
+        [TestInitialize]
+        public void Init()
+        {
+            _input = null;
+            _expected = null;
+        }
 
         [TestMethod]
         public void Sample()
         {
-            Assert.Equals(@"Mr%20John%20Smith", _c.Q03_URLify("Mr John Smith".ToCharArray(), 13));
+            _input    = "Mr John Smith    ";
+            _expected = "Mr%20John%20Smith";
+            Verify();
+        }
+
+        [TestMethod]
+        public void Basic1()
+        {
+            _input    = " a  ";
+            _expected = "%20a";
+            Verify();
+        }
+
+        [TestMethod]
+        public void Basic2()
+        {
+            _input    = "  a    ";
+            _expected = "%20%20a";
+            Verify();
+        }
+
+        [TestMethod]
+        public void AllWhiteSpace()
+        {
+            _input = "     ";
+            _expected = "     ";
+            Verify();
+        }
+
+        [TestMethod]
+        public void ConsecutiveSpaces()
+        {
+            _input    = "a  b   c          ";
+            _expected = "a%20%20b%20%20%20c";
+            Verify();
         }
     }
 }

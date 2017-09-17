@@ -16,7 +16,7 @@ namespace CtciCsharp
                     return false;
                 }
                 seenChars.Add(c);
-           } 
+            }
             return true;
         }
 
@@ -45,13 +45,13 @@ namespace CtciCsharp
             Q02_CountChars(x, xCharCount);
             Q02_CountChars(y, yCharCount);
 
-            foreach(char key in xCharCount.Keys)
+            foreach (char key in xCharCount.Keys)
             {
                 if (!yCharCount.ContainsKey(key))
                 {
                     return false;
                 }
-                if(xCharCount[key] != yCharCount[key])
+                if (xCharCount[key] != yCharCount[key])
                 {
                     return false;
                 }
@@ -74,12 +74,43 @@ namespace CtciCsharp
             }
         }
 
-        public string Q03_URLify(char[] s, int length)
+        public char[] Q03_URLify(char[] s, int length)
         {
-            // what about trailing whitespace?
-            //   since it
+            // ? what about other types of whitespace?
+            //     too complicated for now...
+            // ? what if it's all whitespace?
+            //     just return as-is
 
-            throw new NotImplementedException();
+            const string replacement = "%20";
+
+            int i = length - 1;
+
+            int spaceCount = 0;
+            for (int j = 0; j < length; j++)
+            {
+                if (Char.IsWhiteSpace(s[j]))
+                    spaceCount++;
+            }
+            if (spaceCount == 0)
+                return s;
+
+            // now i is index of first non-whitespace char
+            while (i >= 0)
+            {
+                if (!Char.IsWhiteSpace(s[i]))
+                {
+                    s[i + spaceCount * (replacement.Length - 1)] = s[i];
+                }
+                else
+                {
+                    for (int x = 0; x < replacement.Length; x++)
+                        s[i + x] = replacement[x];
+                    spaceCount--;
+                }
+                i--;
+            }
+
+            return s;
         }
     }
 }
