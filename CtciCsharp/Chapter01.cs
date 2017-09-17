@@ -74,19 +74,20 @@ namespace CtciCsharp
             }
         }
 
-        public char[] Q03_URLify(char[] s, int length)
+        public char[] Q03_URLify(char[] s, int trueLength)
         {
             // ? what about other types of whitespace?
             //     too complicated for now...
             // ? what if it's all whitespace?
             //     just return as-is
 
-            const string replacement = "%20";
+            const string REPLACEMENT = "%20";
+            const int REPLEN = 3;
 
-            int i = length - 1;
+            int i = trueLength - 1;
 
             int spaceCount = 0;
-            for (int j = 0; j < length; j++)
+            for (int j = 0; j < trueLength; j++)
             {
                 if (Char.IsWhiteSpace(s[j]))
                     spaceCount++;
@@ -97,14 +98,16 @@ namespace CtciCsharp
             // now i is index of first non-whitespace char
             while (i >= 0)
             {
+                int delta = spaceCount * (REPLEN - 1);
+
                 if (!Char.IsWhiteSpace(s[i]))
                 {
-                    s[i + spaceCount * (replacement.Length - 1)] = s[i];
+                    s[i + delta] = s[i];
                 }
                 else
                 {
-                    for (int x = 0; x < replacement.Length; x++)
-                        s[i + x] = replacement[x];
+                    for (int x = 0; x < REPLEN; x++)
+                        s[i + delta - (REPLEN-1) + x] = REPLACEMENT[x];
                     spaceCount--;
                 }
                 i--;

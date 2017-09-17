@@ -140,8 +140,16 @@ namespace CtciCsharpTest
         [TestMethod]
         public void AllWhiteSpace()
         {
-            _input = "     ";
+            _input    = "     ";
             _expected = "     ";
+            Verify();
+        }
+
+        [TestMethod]
+        public void NoWhiteSpace()
+        {
+            _input    = "abcde";
+            _expected = "abcde";
             Verify();
         }
 
