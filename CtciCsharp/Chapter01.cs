@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Xunit;
 
 namespace CtciCsharp
 {
@@ -114,6 +115,105 @@ namespace CtciCsharp
             }
 
             return s;
+        }
+
+        /*
+         * Palindrome Permutation: Given a string, write a function to check if it is a 
+         * permutation of a palindrome. A palindrome is a word or phrase that is the same 
+         * forwards and backwards. A permutation is a rearrangement of letters.  The palindrome 
+         * does not need to be limited to just dictionary words.
+         * 
+         * EXAMPLE
+         * Input: Tact Coa
+         * Output: True (permutations: "taco cat". "atco cta". etc.)
+         *
+         * Hints: #106, #121, #134, #136
+         */
+        public bool Q04_PalindromePermutation(string s)
+        {
+            // ASS: whitespace is just ignored
+            // ASS: casing is just ignored
+            // ?    what about emptystring or all whitespace? 
+            //          treat as special case: return true
+            // ?    what about null?  return false
+            //
+            // !    a palindrome must have pairs of chars, except the "middle" char
+            // !    just count the chars, all counts must be even, only one may be odd
+
+            throw new NotImplementedException();
+        }
+    }
+
+    public static class Ch01Q04
+    {
+        public static bool Q04_PalindromePermutation(string input)
+        {
+            if (input == null)
+                return false;
+            if (String.IsNullOrWhiteSpace(input))
+                return true;
+
+            Dictionary<char, int> charCount = new Dictionary<char, int>();
+            foreach(char c in input.ToLower())
+            {
+                if (Char.IsWhiteSpace(c))
+                    continue;
+
+                if (!charCount.ContainsKey(c))
+                {
+                    charCount[c] = 0;
+                }
+                charCount[c]++;
+            }
+
+            int oddCount = 0;
+            foreach(char key in charCount.Keys)
+            {
+                if(charCount[key] %2 != 0)
+                {
+                    oddCount++;
+                }
+            }
+
+            if (oddCount <= 1)
+                return true;
+            return false;
+        }
+    }
+
+    public class Ch01Q04_Tests
+    {
+        [Fact]
+        public void Sample()
+        {
+            Assert.True(Ch01Q04.Q04_PalindromePermutation("Tact Coa"));
+        }
+
+        [Theory]
+        [InlineData("car rac e")]
+        [InlineData("stop pots")]
+        [InlineData("   abcba   ")]
+        [InlineData("   abccba   ")]
+        [InlineData("a")]
+        [InlineData("aa")]
+        [InlineData("aaa")]
+        [InlineData("aaaa")]
+        [InlineData("")]
+        [InlineData("   ")]
+        public void YesItIs(string s)
+        {
+            Assert.True(Ch01Q04.Q04_PalindromePermutation(s));
+        }
+
+
+        [Theory]
+        [InlineData("abc")]
+        [InlineData("xy   z")]
+        [InlineData("   abcjk   ")]
+        [InlineData(null)]
+        public void NotItIsnt(string s)
+        {
+            Assert.False(Ch01Q04.Q04_PalindromePermutation(s));
         }
     }
 }
