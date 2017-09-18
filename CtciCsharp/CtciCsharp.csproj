@@ -60,6 +60,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Ch01Q05.cs" />
     <Compile Include="Chapter01.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

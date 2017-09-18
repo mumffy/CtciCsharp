@@ -117,18 +117,6 @@ namespace CtciCsharp
             return s;
         }
 
-        /*
-         * Palindrome Permutation: Given a string, write a function to check if it is a 
-         * permutation of a palindrome. A palindrome is a word or phrase that is the same 
-         * forwards and backwards. A permutation is a rearrangement of letters.  The palindrome 
-         * does not need to be limited to just dictionary words.
-         * 
-         * EXAMPLE
-         * Input: Tact Coa
-         * Output: True (permutations: "taco cat". "atco cta". etc.)
-         *
-         * Hints: #106, #121, #134, #136
-         */
         public bool Q04_PalindromePermutation(string s)
         {
             // ASS: whitespace is just ignored
@@ -181,7 +169,7 @@ namespace CtciCsharp
         }
     }
 
-    public class Ch01Q04_Tests
+    public class Q04_PalindromePermutation_Tests
     {
         [Fact]
         public void Sample()
