@@ -1,22 +1,30 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using Xunit;
 
 namespace CtciCsharp.Chapter02
 {
     public class LinkedListToy<T>
     {
-        Node _head;
-        Node _tail;
+        Node<T> _head;
+        Node<T> _tail;
 
         public LinkedListToy()
         {
         }
 
-        public Node Head
+        public LinkedListToy(params T[] list) : this(new List<T>(list))
+        {
+        }
+
+        public LinkedListToy(IEnumerable<T> list)
+        {
+            foreach (T item in list)
+            {
+                Append(item);
+            }
+        }
+
+        public Node<T> Head
         {
             get
             {
@@ -26,56 +34,56 @@ namespace CtciCsharp.Chapter02
 
         public void Append(T data)
         {
-            Node newNode = new Node(data);
-            if(_head == null)
+            Node<T> newNode = new Node<T>(data);
+            if (_head == null)
             {
                 _head = newNode;
-                _tail = newNode;
             }
             else
             {
                 _tail.Next = newNode;
             }
-            
+            _tail = newNode;
+
         }
 
-        public class Node
+    }
+    public class Node<T>
+    {
+        T _data;
+        Node<T> _next;
+
+        public Node(T data)
         {
-            T _data;
-            Node _next;
+            Data = data;
+        }
 
-            public Node(T data)
+        public T Data
+        {
+            get
             {
-                Data = data;
+                return _data;
             }
-
-            public T Data
+            set
             {
-                get
-                {
-                    return _data;
-                }
-                set
-                {
-                    _data = value;
-                }
+                _data = value;
             }
+        }
 
-            public Node Next
+        public Node<T> Next
+        {
+            get
             {
-                get
-                {
-                    return _next;
-                }
-                set
-                {
-                    _next = value;
-                }
+                return _next;
+            }
+            set
+            {
+                _next = value;
             }
         }
     }
 
-    public class Q01H_LinkedListToy_Tests
+    public class C02Q01H_LinkedListToy_Tests
     {
         [Fact]
         public void BasicLL()
@@ -85,6 +93,37 @@ namespace CtciCsharp.Chapter02
 
             L.Append("apple");
             L.Append("banana");
+            Assert.Equal("apple", L.Head.Data);
+            Assert.Equal("banana", L.Head.Next.Data);
+            Assert.Equal(null, L.Head.Next.Next);
+        }
+
+        [Fact]
+        public void CtorParamList()
+        {
+            LinkedListToy<string> L = new LinkedListToy<string>(new List<string> { "apple", "banana" });
+            Assert.Equal("apple", L.Head.Data);
+            Assert.Equal("banana", L.Head.Next.Data);
+            Assert.Equal(null, L.Head.Next.Next);
+        }
+
+        [Fact]
+        public void CtorParams2()
+        {
+            LinkedListToy<int> list = new LinkedListToy<int>(7, 8, 9, 3);
+            C02Q01.RemoveDupes(list);
+            Assert.NotNull(list.Head);
+            Assert.Equal(7, list.Head.Data);
+            Assert.Equal(8, list.Head.Next.Data);
+            Assert.Equal(9, list.Head.Next.Next.Data);
+            Assert.Equal(3, list.Head.Next.Next.Next.Data);
+            Assert.Null(list.Head.Next.Next.Next.Next);
+        }
+
+        [Fact]
+        public void CtorParams()
+        {
+            LinkedListToy<string> L = new LinkedListToy<string>("apple", "banana");
             Assert.Equal("apple", L.Head.Data);
             Assert.Equal("banana", L.Head.Next.Data);
             Assert.Equal(null, L.Head.Next.Next);
