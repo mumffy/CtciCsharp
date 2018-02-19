@@ -72,6 +72,7 @@
   <ItemGroup>
     <Compile Include="06 Arrays and Strings\Q01.cs" />
     <Compile Include="08 Stacks and Queues\Q07.cs" />
+    <Compile Include="09 Binary Trees\Q01.cs" />
     <Compile Include="Data Structures\BinaryTree.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -81,6 +82,7 @@
   <ItemGroup>
     <Analyzer Include="..\packages\xunit.analyzers.0.8.0\analyzers\dotnet\cs\xunit.analyzers.dll" />
   </ItemGroup>
+  <ItemGroup />
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>

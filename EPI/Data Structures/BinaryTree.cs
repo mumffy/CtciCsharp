@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Text;
 using Xunit;
 
 namespace EPI.DataStructures
@@ -17,6 +19,36 @@ namespace EPI.DataStructures
             {
                 root = value;
             }
+        }
+
+        public string ToBfstrString()
+        {
+            Queue<Node<T>> queue = new Queue<Node<T>>();
+            StringBuilder sb = new StringBuilder();
+
+            queue.Enqueue(Root);
+
+            while (queue.Count > 0)
+            {
+                Node<T> node = queue.Dequeue();
+                if (node != null)
+                {
+                    sb.AppendFormat("{0}", node.Value);
+                    if(node.Left != null)
+                    {
+                        sb.AppendFormat(" L:{0}", node.Left.Value);
+                        queue.Enqueue(node.Left);
+                    }
+                    if(node.Right != null)
+                    {
+                        sb.AppendFormat(" R:{0}", node.Right.Value);
+                        queue.Enqueue(node.Right);
+                    }
+                    sb.Append("\n");
+                }
+            }
+
+            return sb.ToString();
         }
     }
 

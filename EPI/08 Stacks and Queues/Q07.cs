@@ -45,7 +45,7 @@ namespace EPI.C08_Stacks_and_Queues
                     Node<T> node = data.Node;
                     int depth = data.Depth;
 
-                    while(list.Count <= depth)
+                    while (list.Count <= depth)
                     {
                         list.Add(new List<T>());
                     }
@@ -56,6 +56,37 @@ namespace EPI.C08_Stacks_and_Queues
                 }
             }
 
+            return list;
+        }
+
+        public static List<List<T>> BfsTraverseWithoutWrapper<T>(BinaryTree<T> tree)
+        {
+            Queue<Node<T>> currentDepth = new Queue<Node<T>>();
+            Queue<Node<T>> nextDepth = new Queue<Node<T>>();
+            List<T> currentDepthValues;
+            List<List<T>> list = new List<List<T>>();
+            Node<T> node;
+
+            nextDepth.Enqueue(tree.Root);
+            while (nextDepth.Count > 0)
+            {
+                currentDepthValues = new List<T>();
+                currentDepth = nextDepth;
+                nextDepth = new Queue<Node<T>>();
+
+                while (currentDepth.Count > 0)
+                {
+                    node = currentDepth.Dequeue();
+                    if (node != null)
+                    {
+                        currentDepthValues.Add(node.Value);
+                        nextDepth.Enqueue(node.Left);
+                        nextDepth.Enqueue(node.Right);
+                    }
+                }
+
+                list.Add(currentDepthValues);
+            }
             return list;
         }
 
@@ -82,7 +113,21 @@ namespace EPI.C08_Stacks_and_Queues
         }
 
         [Fact]
-        public void Sample()
+        public void Example()
+        {
+            BinaryTree<int> tree = GetExampleTree();
+            var l = Q07.BfsTraverse(tree);
+            AssertExampleListofList(l);
+        }
+
+        [Fact]
+        public void TestWithoutAdditonalDataStructure()
+        {
+            var l = Q07.BfsTraverseWithoutWrapper(GetExampleTree());
+            AssertExampleListofList(l);
+        }
+
+        private BinaryTree<int> GetExampleTree()
         {
             BinaryTree<int> tree = new BinaryTree<int>();
             tree.Root = new Node<int>(314);
@@ -114,9 +159,17 @@ namespace EPI.C08_Stacks_and_Queues
                     right: new Node<int>(28)
                 )
             );
+            return tree;
+        }
 
-            var l = Q07.BfsTraverse(tree);
-            output.WriteLine(Q07.BfsPrint(tree));
+        private void AssertExampleListofList(List<List<int>> l)
+        {
+            Assert.Equal(new List<int> { 314 }, l[0]);
+            Assert.Equal(new List<int> { 6, 6 }, l[1]);
+            Assert.Equal(new List<int> { 271, 561, 2, 271 }, l[2]);
+            Assert.Equal(new List<int> { 28, 0, 3, 1, 28 }, l[3]);
+            Assert.Equal(new List<int> { 17, 401, 257 }, l[4]);
+            Assert.Equal(new List<int> { 641 }, l[5]);
         }
     }
 }
