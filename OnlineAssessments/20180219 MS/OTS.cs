@@ -83,32 +83,29 @@ namespace Online
                 b = b.Next;
             }
 
+            int aValue;
+            int bValue;
             // LIFO will cause A and B's least significant digits to be pop out first
-            while (aStack.Count > 0 && bStack.Count > 0)
+            while (aStack.Count > 0 || bStack.Count > 0 || carry > 0)
             {
-                sum = aStack.Pop() + bStack.Pop() + carry;
+                aValue = 0;
+                bValue = 0;
+
+                try {
+                    aValue = aStack.Pop();
+                }
+                catch (InvalidOperationException ex) { }
+                try
+                {
+                    bValue = bStack.Pop();
+                }
+                catch (InvalidOperationException ex) { }
+
+                sum = aValue + bValue + carry;
                 newHead = new Node<int>(sum % 10, result);
                 result = newHead;
 
                 carry = sum / 10;
-            }
-
-            if (aStack.Count > 0)
-                leftovers = aStack;
-            else if (bStack.Count > 0)
-                leftovers = bStack;
-            while(leftovers != null && leftovers.Count > 0)
-            {
-                sum = leftovers.Pop() + carry;
-                newHead = new Node<int>(sum % 10, result);
-                result = newHead;
-
-                carry = sum / 10;
-            }
-            if (carry > 0)
-            {
-                newHead = new Node<int>(1, result);
-                result = newHead;
             }
 
             return result;
