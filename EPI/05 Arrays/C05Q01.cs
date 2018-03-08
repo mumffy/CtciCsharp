@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -19,7 +16,7 @@ namespace EPI.C05_Arrays
             }
         }
     }
-    public static class Q01
+    public static class C05Q01
     {
         public static void Partition(int[] a, int i) // i is the index of the "pivot"
         {
@@ -27,15 +24,13 @@ namespace EPI.C05_Arrays
             int bottom = 0;
             int middle = 0;
             int top = a.Length - 1;
-            int pivotIndex = 0;
-
 
             while (bottom < top && middle < top)
             {
                 if (a[bottom] < pivot)
                 {
                     bottom++;
-
+                    middle++;
                 }
                 else if (a[bottom] > pivot)
                 {
@@ -50,6 +45,7 @@ namespace EPI.C05_Arrays
             }
         }
 
+        #region int[] Swap extension method
         private static void Swap(this int[] array, int a, int b)
         {
             if (a >= array.Length || b >= array.Length || a < 0 || b < 0 || a == b)
@@ -70,13 +66,14 @@ namespace EPI.C05_Arrays
             a.Swap(x, y);
             Assert.Equal(a, e);
         }
+        #endregion 
     }
 
-    public class Tests
+    public class C05Q01_Tests
     {
         private readonly ITestOutputHelper output;
 
-        public Tests(ITestOutputHelper output)
+        public C05Q01_Tests(ITestOutputHelper output)
         {
             this.output = output;
         }
@@ -94,7 +91,31 @@ namespace EPI.C05_Arrays
         {
             int[] a = { 99, 5, 4, 3, 2, 1, 7 };
             int p = 6;
-            Q01.Partition(a, p);
+            C05Q01.Partition(a, p);
+            Assert.True(validatePartitionOrdering(a, a[p]));
+            output.WriteLine(String.Join(" ", a));
+        }
+
+        [Fact]
+        public void Test02()
+        {
+            int[] a = { 99, 3, 2, 7, 1, 4, 5, 7 };
+            int p = 6;
+            C05Q01.Partition(a, p);
+            Assert.True(validatePartitionOrdering(a, a[p]));
+            output.WriteLine(String.Join(" ", a));
+        }
+
+        [Theory]
+        [InlineData(new int[] { 2, 1 }, 0)]
+        [InlineData(new int[] { 2, 1 }, 1)]
+        [InlineData(new int[] { 1, 3, 1 }, 1)]
+        [InlineData(new int[] { 2, 2, 2, 2, 2, 1 }, 0)]
+        [InlineData(new int[] { 2, 9, 2, 2, 2, 2, 1 }, 0)]
+        [InlineData(new int[] { 2, 1, 1, 1, 1, 1, 9 }, 0)]
+        public void Test03(int[] a, int p)
+        {
+            C05Q01.Partition(a, p);
             Assert.True(validatePartitionOrdering(a, a[p]));
             output.WriteLine(String.Join(" ", a));
         }
@@ -126,6 +147,7 @@ namespace EPI.C05_Arrays
             return true;
         }
 
+        #region tests for validatePartitionOrdering method that drives the "real" Tests
         [Fact]
         public void OrderValidation_Right01()
         {
@@ -157,5 +179,6 @@ namespace EPI.C05_Arrays
             int p = 4;
             Assert.False(validatePartitionOrdering(a, p));
         }
+        #endregion
     }
 }
