@@ -72,6 +72,7 @@
   <ItemGroup>
     <Compile Include="05 Arrays\C05Q06.cs" />
     <Compile Include="05 Arrays\C05Q01.cs" />
+    <Compile Include="06 Strings\C06Q01.cs" />
     <Compile Include="08 Stacks and Queues\C08Q07.cs" />
     <Compile Include="09 Binary Trees\C09Q01.cs" />
     <Compile Include="Data Structures\BinaryTree.cs" />
