@@ -31,6 +31,31 @@ namespace EPI.DataStructures.LinkedList
             }
             Head = dummyHead.Next;
         }
+
+        public static bool AreValuesEqual(LinkedList<T> listA, LinkedList<T> listB)
+        {
+            if (listA == null && listB != null || listA != null && listB == null)
+                return false;
+            if (listA == null && listB == null)
+                return true;
+
+            Node<T> a = listA.Head;
+            Node<T> b = listB.Head;
+
+            while (a != null && b != null)
+            {
+                if (!a.Value.Equals(b.Value))
+                {
+                    return false;
+                }
+                a = a.Next;
+                b = b.Next;
+            }
+            if (a != null || b != null)
+                return false;
+
+            return true;
+        }
     }
 
     public class LinkedListInteger : LinkedList<int>
@@ -96,11 +121,38 @@ namespace EPI.DataStructures.LinkedList
             int[] a = new int[] { 3, 1, 6, 8, -99, 33 };
             LinkedList<int> list = new LinkedList<int>(a);
             Node<int> node = list.Head;
-            for(int i=0; i<a.Length; i++)
+            for (int i = 0; i < a.Length; i++)
             {
                 Assert.Equal(a[i], node.Value);
                 node = node.Next;
             }
+        }
+
+        [Theory]
+        [InlineData(new int[] { 1, 2, 3 },
+                    new int[] { 1, 2, 3 }, true)]
+        [InlineData(new int[] { 1, 2, },
+                    new int[] { 1, 2, 3 }, false)]
+        [InlineData(new int[] { 1, 2, 3 },
+                    new int[] { 1, 2 }, false)]
+        [InlineData(new int[] { 1, 2, 3 },
+                    new int[] { 1, 9, 3 }, false)]
+        [InlineData(new int[] { 1, 9, 3 },
+                    new int[] { 1, 2, 3 }, false)]
+        [InlineData(new int[] { },
+                    new int[] { 1, 2, 3 }, false)]
+        public void ValueEqual_Tests(int[] a, int[] b, bool expected)
+        {
+            LinkedList<int> listA = new LinkedList<int>(a);
+            LinkedList<int> listB = new LinkedList<int>(b);
+            Assert.Equal(expected, LinkedList<int>.AreValuesEqual(listA, listB));
+        }
+
+        [Fact]
+        public void ValueEqual_Null_Tests()
+        {
+            Assert.False(LinkedList<int>.AreValuesEqual(null, new LinkedList<int>(new int[] { 1, 2, 3 })));
+            Assert.False(LinkedList<int>.AreValuesEqual(new LinkedList<int>(new int[] { 1, 2, 3 }), null));
         }
     }
 
