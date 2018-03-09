@@ -52,7 +52,42 @@ namespace EPI.C07_LinkedLists
             Node<int> mergedNode = C07Q01.MergeSortedLists(a, b).Head;
             Node<int> expectedNode = expected.Head;
 
-            while(expectedNode != null)
+            while (expectedNode != null)
+            {
+                Assert.Equal(expectedNode.Value, mergedNode.Value);
+                expectedNode = expectedNode.Next;
+                mergedNode = mergedNode.Next;
+            }
+            Assert.Null(mergedNode);
+        }
+
+        [Theory]
+        [InlineData(
+            new int[] { 1, 1, 1, 1, 1, 1, 1 },
+            new int[] { 0 },
+            new int[] { 0, 1, 1, 1, 1, 1, 1, 1 })]
+        [InlineData(
+            new int[] { 1, 1, 1, 1, 1, 1, 1 },
+            new int[] { 99 },
+            new int[] { 1, 1, 1, 1, 1, 1, 1, 99 })]
+        [InlineData(
+            new int[] { 1, 1, 1 },
+            new int[] { 1, 1, 1 },
+            new int[] { 1, 1, 1, 1, 1, 1 })]
+        [InlineData(
+            new int[] { 1, 1, 1 },
+            new int[] { 1, 1, 1, 9 },
+            new int[] { 1, 1, 1, 1, 1, 1, 9 })]
+        public void Tests(int[] arrayA, int[] arrayB, int[] arrayExpected)
+        {
+            LinkedList<int> a = new LinkedList<int>(arrayA);
+            LinkedList<int> b = new LinkedList<int>(arrayB);
+            LinkedList<int> expected = new LinkedList<int>(arrayExpected);
+
+            Node<int> mergedNode = C07Q01.MergeSortedLists(a, b).Head;
+            Node<int> expectedNode = expected.Head;
+
+            while (expectedNode != null)
             {
                 Assert.Equal(expectedNode.Value, mergedNode.Value);
                 expectedNode = expectedNode.Next;
