@@ -13,29 +13,29 @@ namespace EPI.C07_LinkedLists
             else if (listB.Head == null)
                 return listA;
 
-            LinkedList<int> merged = new LinkedList<int>();
             Node<int> a = listA.Head;
             Node<int> b = listB.Head;
-            Node<int> temp;
+            Node<int> dummyHead = new Node<int>();
+            Node<int> tail = dummyHead;
 
-            merged.Head = a.Value < b.Value ? a : b;
             while (a != null && b != null)
             {
                 if (a.Value < b.Value)
                 {
-                    temp = a.Next;
-                    a.Next = b;
-                    a = temp;
+                    tail.Next = a;
+                    tail = a;
+                    a = a.Next;
                 }
                 else
                 {
-                    temp = b.Next;
-                    b.Next = a;
-                    b = temp;
+                    tail.Next = b;
+                    tail = b;
+                    b = b.Next;
                 }
             }
+            tail.Next = a ?? b;
 
-            return merged;
+            return new LinkedList<int>(dummyHead.Next);
         }
     }
 
@@ -59,7 +59,6 @@ namespace EPI.C07_LinkedLists
                 mergedNode = mergedNode.Next;
             }
             Assert.Null(mergedNode);
-            Assert.Equal(expected, C07Q01.MergeSortedLists(a, b));
         }
     }
 }
