@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace EPI.C05_Arrays
+namespace EPI.C06_Strings
 {
     public static class C06Q01
     {

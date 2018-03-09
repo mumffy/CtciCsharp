@@ -1,4 +1,5 @@
-﻿using Xunit;
+﻿using System.Collections.Generic;
+using Xunit;
 
 namespace EPI.DataStructures.LinkedList
 {
@@ -6,13 +7,29 @@ namespace EPI.DataStructures.LinkedList
     {
         public Node<T> Head { get; set; }
 
-        public LinkedList() : this(null)
+        public LinkedList()
         {
+            Head = null;
         }
 
         public LinkedList(Node<T> head)
         {
             Head = head;
+        }
+
+        public LinkedList(IEnumerable<T> e)
+        {
+            Node<T> tail = new Node<T>();
+            Node<T> dummyHead = tail;
+            Node<T> current;
+
+            foreach (T i in e)
+            {
+                current = new Node<T>(i);
+                tail.Next = current;
+                tail = current;
+            }
+            Head = dummyHead.Next;
         }
     }
 
@@ -37,7 +54,10 @@ namespace EPI.DataStructures.LinkedList
     {
         public T Value { get; set; }
         public Node<T> Next { get; set; }
+        public Node()
+        {
 
+        }
         public Node(T value, Node<T> next = null)
         {
             Value = value;
@@ -62,12 +82,25 @@ namespace EPI.DataStructures.LinkedList
 
             int[] expected = new int[] { 123, 555, -3, 99, 765 };
             n = list.Head;
-            foreach(int i in expected)
+            foreach (int i in expected)
             {
                 Assert.Equal(i, n.Value);
                 n = n.Next;
             }
             Assert.Null(n);
+        }
+
+        [Fact]
+        public void ctor_tests()
+        {
+            int[] a = new int[] { 3, 1, 6, 8, -99, 33 };
+            LinkedList<int> list = new LinkedList<int>(a);
+            Node<int> node = list.Head;
+            for(int i=0; i<a.Length; i++)
+            {
+                Assert.Equal(a[i], node.Value);
+                node = node.Next;
+            }
         }
     }
 
