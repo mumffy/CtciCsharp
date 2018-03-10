@@ -44,8 +44,12 @@ namespace EPI.C07_LinkedLists
             // fast is currently in a cycle
             int cycleLength = 1;
             Node<T> seen = fast;
-            while(seen != fast)
+            fast = fast.Next;
+            while (seen != fast)
+            {
                 cycleLength++;
+                fast = fast.Next;
+            }
 
             Node<T> cycleStart = list.Head;
             while (cycleStart != fast)
@@ -58,6 +62,44 @@ namespace EPI.C07_LinkedLists
                 }
                 cycleStart = cycleStart.Next;
             }
+            return cycleStart;
+        }
+        public static Node<T> FindCycleOptimized(EPI.DataStructures.LinkedList.LinkedList<T> list)
+        {
+            if (list.Head == null || list.Head.Next == null)
+                return null;
+
+            Node<T> slow = list.Head;
+            Node<T> fast = list.Head.Next;
+
+            while (fast != null && fast != slow)
+            {
+                fast = fast.Next?.Next;
+                slow = slow.Next;
+            }
+            if (fast == null)
+                return null;
+
+            // fast is currently in a cycle
+            int cycleLength = 1;
+            Node<T> seen = fast;
+            fast = fast.Next;
+            while (seen != fast)
+            {
+                cycleLength++;
+                fast = fast.Next;
+            }
+
+            Node<T> cycleStart = fast = list.Head;
+            for (int i = 0; i < cycleLength; i++)
+                fast = fast.Next;
+
+            while(cycleStart != fast)
+            {
+                cycleStart = cycleStart.Next;
+                fast = fast.Next;
+            }
+
             return cycleStart;
         }
     }
@@ -78,6 +120,7 @@ namespace EPI.C07_LinkedLists
 
             Assert.Equal(b, C07Q03<Object>.FindCycleWithDict(list));
             Assert.Equal(b, C07Q03<Object>.FindCycle(list));
+            Assert.Equal(b, C07Q03<Object>.FindCycleOptimized(list));
         }
 
         [Fact]
@@ -100,6 +143,7 @@ namespace EPI.C07_LinkedLists
 
             Assert.Equal(c, C07Q03<Object>.FindCycleWithDict(list));
             Assert.Equal(c, C07Q03<Object>.FindCycle(list));
+            Assert.Equal(c, C07Q03<Object>.FindCycleOptimized(list));
         }
 
         [Fact]
@@ -122,6 +166,7 @@ namespace EPI.C07_LinkedLists
 
             Assert.Equal(a, C07Q03<Object>.FindCycleWithDict(list));
             Assert.Equal(a, C07Q03<Object>.FindCycle(list));
+            Assert.Equal(a, C07Q03<Object>.FindCycleOptimized(list));
         }
 
         [Fact]
@@ -134,6 +179,7 @@ namespace EPI.C07_LinkedLists
 
             Assert.Equal(a, C07Q03<Object>.FindCycleWithDict(list));
             Assert.Equal(a, C07Q03<Object>.FindCycle(list));
+            Assert.Equal(a, C07Q03<Object>.FindCycleOptimized(list));
         }
 
         [Fact]
@@ -156,6 +202,7 @@ namespace EPI.C07_LinkedLists
 
             Assert.Equal(f, C07Q03<Object>.FindCycleWithDict(list));
             Assert.Equal(f, C07Q03<Object>.FindCycle(list));
+            Assert.Equal(f, C07Q03<Object>.FindCycleOptimized(list));
         }
 
         [Fact]
@@ -172,6 +219,7 @@ namespace EPI.C07_LinkedLists
 
             Assert.Null(C07Q03<Object>.FindCycleWithDict(list));
             Assert.Null(C07Q03<Object>.FindCycle(list));
+            Assert.Null(C07Q03<Object>.FindCycleOptimized(list));
         }
 
         [Fact]
@@ -184,6 +232,7 @@ namespace EPI.C07_LinkedLists
 
             Assert.Null(C07Q03<Object>.FindCycleWithDict(list));
             Assert.Null(C07Q03<Object>.FindCycle(list));
+            Assert.Null(C07Q03<Object>.FindCycleOptimized(list));
         }
     }
 }
