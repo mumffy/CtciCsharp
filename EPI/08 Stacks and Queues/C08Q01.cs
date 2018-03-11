@@ -48,13 +48,27 @@ namespace EPI.C08_Stacks_and_Queues
         public void Test01()
         {
             StackWithMax<int> stack = new StackWithMax<int>();
+            Assert.Throws<InvalidOperationException>(() => stack.Pop());
+            Assert.Throws<InvalidOperationException>(() => stack.Max);
+
             stack.Push(10);
             Assert.Equal(10, stack.Max);
+
             stack.Push(5);
             Assert.Equal(10, stack.Max);
+
             stack.Push(99);
             Assert.Equal(99, stack.Max);
 
+            Assert.Equal(99, stack.Pop());
+            Assert.Equal(10, stack.Max);
+
+            Assert.Equal(5, stack.Pop());
+            Assert.Equal(10, stack.Max);
+
+            Assert.Equal(10, stack.Pop());
+            Assert.Throws<InvalidOperationException>(() => stack.Pop());
+            Assert.Throws<InvalidOperationException>(() => stack.Max);
         }
 
     }
