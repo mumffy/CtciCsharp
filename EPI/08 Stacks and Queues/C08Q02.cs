@@ -15,9 +15,9 @@ namespace EPI.C08_Stacks_and_Queues
         private static Stack<RpnToken> TokensToStack(string input)
         {
             Stack<RpnToken> stack = new Stack<RpnToken>();
-            string[] tokens = input.Split();
+            string[] tokens = input.Split(',');
 
-            for (int i = tokens.Length - 1; i > 0; i--)
+            for (int i = tokens.Length - 1; i >= 0; i--)
             {
                 string token = tokens[i];
                 int num;
@@ -25,7 +25,7 @@ namespace EPI.C08_Stacks_and_Queues
                 {
                     stack.Push(new Number(num));
                 }
-                else 
+                else
                 {
                     OpType op;
                     switch (token)
@@ -46,7 +46,7 @@ namespace EPI.C08_Stacks_and_Queues
                             throw new Exception($"{token} is not a known operation");
                     }
                     stack.Push(new Operator(op));
-                } 
+                }
             }
 
             return stack;
@@ -60,18 +60,18 @@ namespace EPI.C08_Stacks_and_Queues
         {
             public Number(int i)
             {
-                value = i;
+                Value = i;
             }
-            public int value { get; set; }
+            public int Value { get; }
         }
 
         public class Operator : RpnToken
         {
             public Operator(OpType o)
             {
-                value = o;
+                Value = o;
             }
-            public OpType value { get; set; }
+            public OpType Value { get; }
         }
 
         public enum OpType { Add, Subtract, Multiply, Divide };
@@ -79,6 +79,16 @@ namespace EPI.C08_Stacks_and_Queues
         [Fact]
         public static void TokensToStack_Test()
         {
+
+            string input = "10,5,+";
+            var stack = TokensToStack(input);
+
+            var numItem = (Number)stack.Pop();
+            Assert.Equal(10, numItem.Value);
+            numItem = (Number)stack.Pop();
+            Assert.Equal(5, numItem.Value);
+            var opItem = (Operator)stack.Pop();
+            Assert.Equal(OpType.Add, opItem.Value);
 
         }
 
