@@ -8,8 +8,40 @@ namespace EPI.C08_Stacks_and_Queues
     {
         public static int EvaluateRPN(string input)
         {
+            Stack<RpnToken> stack = TokensToStack(input);
+            int result = 0;
 
-            return 0;
+            while (stack.Count > 0)
+            {
+                int lhs = (stack.Pop() as Number).Value;
+                if (stack.Count > 0)
+                {
+                    int rhs = (stack.Pop() as Number).Value;
+                    OpType op = (stack.Pop() as Operator).Value;
+                    switch (op)
+                    {
+                        case OpType.Add:
+                            result = lhs + rhs;
+                            break;
+                        case OpType.Subtract:
+                            result = lhs - rhs;
+                            break;
+                        case OpType.Multiply:
+                            result = lhs * rhs;
+                            break;
+                        case OpType.Divide:
+                            result = lhs / rhs;
+                            break;
+                    }
+                    stack.Push(new Number(result));
+                }
+                else
+                {
+                    result = lhs;
+                }
+            }
+
+            return result;
         }
 
         private static Stack<RpnToken> TokensToStack(string input)
@@ -99,7 +131,7 @@ namespace EPI.C08_Stacks_and_Queues
         [Theory]
         [InlineData("1729", 1729)]
         [InlineData("3,4,+,2,*,1,+", 15)]
-        [InlineData("1,1+,-2,*", -4)]
+        [InlineData("1,1,+,-2,*", -4)]
         [InlineData("-641,6,/,28,/", -3)]
         public void Examples(string input, int expectedOutput)
         {
