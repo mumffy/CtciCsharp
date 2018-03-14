@@ -42,9 +42,19 @@ namespace EPI.C08_Stacks_and_Queues.Q08
         {
             if (count == capacity)
             {
+                int i = 0;
+                int copyIndex = frontIndex;
+                T[] resized = new T[capacity * 2];
+                while (i < capacity)
+                {
+                    resized[i] = array[copyIndex];
+                    copyIndex = (copyIndex + 1) % capacity;
+                    i++;
+                }
+                array = resized;
+                frontIndex = 0;
+                backIndex = capacity - 1;
                 capacity *= 2;
-                Array.Resize(ref array, capacity);
-                
             }
             backIndex = (backIndex + 1) % capacity;
             array[backIndex] = value;
@@ -53,7 +63,7 @@ namespace EPI.C08_Stacks_and_Queues.Q08
 
         public T Dequeue()
         {
-            if(count == 0)
+            if (count == 0)
             {
                 throw new InvalidOperationException("Queue is empty");
             }
@@ -98,7 +108,7 @@ namespace EPI.C08_Stacks_and_Queues.Q08
         }
 
         [Fact]
-        public void Circular_Test()
+        public void Circular_Test01()
         {
             const int capacity = 3;
             ICircularQueue<string> queue = new CircularQueue<string>(capacity);
@@ -137,6 +147,40 @@ namespace EPI.C08_Stacks_and_Queues.Q08
             Assert.Equal("fig", queue.Dequeue());
             Assert.Equal(0, queue.Count);
             Assert.Equal(capacity, queue.Capacity);
+        }
+
+        [Fact]
+        public void Circular_Resizing_Test()
+        {
+            const int capacity = 2;
+            ICircularQueue<string> queue = new CircularQueue<string>(capacity);
+            Assert.Equal(capacity, queue.Capacity);
+
+            queue.Enqueue("a");
+            Assert.Equal("a", queue.Dequeue());
+
+            queue.Enqueue("b");
+            queue.Enqueue("c");
+            Assert.Equal("b", queue.Dequeue());
+            Assert.Equal("c", queue.Dequeue());
+            queue.Enqueue("b");
+            queue.Enqueue("c");
+            Assert.Equal("b", queue.Dequeue());
+            Assert.Equal("c", queue.Dequeue());
+            Assert.Equal(capacity, queue.Capacity);
+
+            queue.Enqueue("b");
+            queue.Enqueue("c");
+            queue.Enqueue("d");
+            queue.Enqueue("e");
+            Assert.Equal(capacity * 2, queue.Capacity);
+            Assert.Equal("b", queue.Dequeue());
+            queue.Enqueue("f");
+            Assert.Equal("c", queue.Dequeue());
+            Assert.Equal("d", queue.Dequeue());
+            Assert.Equal("e", queue.Dequeue());
+            Assert.Equal("f", queue.Dequeue());
+            Assert.Throws<InvalidOperationException>(() => queue.Dequeue());
         }
     }
 }
