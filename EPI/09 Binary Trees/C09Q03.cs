@@ -64,8 +64,6 @@ namespace EPI.C09_Binary_Trees
 
             var aToRoot = BfsFind(tree, a);
             var bToRoot = BfsFind(tree, b);
-            List<Node<T>> longer;
-            List<Node<T>> shorter;
             int aIndex = 0;
             int bIndex = 0;
             int lengthDiff = Math.Abs(aToRoot.Count - bToRoot.Count);
