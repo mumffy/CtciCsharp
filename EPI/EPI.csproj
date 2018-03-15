@@ -81,6 +81,7 @@
     <Compile Include="08 Stacks and Queues\C08Q01.cs" />
     <Compile Include="08 Stacks and Queues\C08Q08.cs" />
     <Compile Include="08 Stacks and Queues\C08Q07.cs" />
+    <Compile Include="09 Binary Trees\C09Q04.cs" />
     <Compile Include="09 Binary Trees\C09Q03.cs" />
     <Compile Include="09 Binary Trees\C09Q01.cs" />
     <Compile Include="Data Structures\BinaryTree.cs" />
