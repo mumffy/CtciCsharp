@@ -86,6 +86,7 @@
     <Compile Include="09 Binary Trees\C09Q01.cs" />
     <Compile Include="Data Structures\BinaryTree.cs" />
     <Compile Include="Data Structures\LinkedList.cs" />
+    <Compile Include="Data Structures\PriorityQueue.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
