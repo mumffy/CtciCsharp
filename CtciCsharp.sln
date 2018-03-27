@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EPI", "EPI\EPI.csproj", "{F276659E-2683-4738-AF9A-7F430D2B3860}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Online", "OnlineAssessments\Online.csproj", "{7256C377-3090-407B-85F1-5C94E72847BF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{F276659E-2683-4738-AF9A-7F430D2B3860}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F276659E-2683-4738-AF9A-7F430D2B3860}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F276659E-2683-4738-AF9A-7F430D2B3860}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7256C377-3090-407B-85F1-5C94E72847BF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7256C377-3090-407B-85F1-5C94E72847BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7256C377-3090-407B-85F1-5C94E72847BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7256C377-3090-407B-85F1-5C94E72847BF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
