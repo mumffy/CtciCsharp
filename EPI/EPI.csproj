@@ -74,6 +74,11 @@
     <Compile Include="08 Stacks and Queues\C08Q07.cs" />
     <Compile Include="09 Binary Trees\C09Q01.cs" />
     <Compile Include="Data Structures\BinaryTree.cs" />
+<<<<<<< HEAD
+=======
+    <Compile Include="Data Structures\LinkedList.cs" />
+    <Compile Include="Data Structures\PriorityQueue.cs" />
+>>>>>>> 8bfe7bd... PQ WIP
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
