@@ -70,11 +70,23 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="06 Arrays and Strings\C06Q01.cs" />
+    <Compile Include="05 Arrays\C05Q06.cs" />
+    <Compile Include="05 Arrays\C05Q01.cs" />
+    <Compile Include="06 Strings\C06Q01.cs" />
+    <Compile Include="07 Linked Lists\C07Q04.cs" />
+    <Compile Include="07 Linked Lists\C07Q03.cs" />
+    <Compile Include="07 Linked Lists\C07Q02.cs" />
+    <Compile Include="07 Linked Lists\C07Q01.cs" />
+    <Compile Include="08 Stacks and Queues\C08Q02.cs" />
+    <Compile Include="08 Stacks and Queues\C08Q01.cs" />
+    <Compile Include="08 Stacks and Queues\C08Q08.cs" />
     <Compile Include="08 Stacks and Queues\C08Q07.cs" />
+    <Compile Include="09 Binary Trees\C09Q04.cs" />
+    <Compile Include="09 Binary Trees\C09Q03.cs" />
     <Compile Include="09 Binary Trees\C09Q01.cs" />
     <Compile Include="Data Structures\BinaryTree.cs" />
     <Compile Include="Data Structures\LinkedList.cs" />
+    <Compile Include="Data Structures\PriorityQueue.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
