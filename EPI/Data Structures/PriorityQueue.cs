@@ -83,6 +83,7 @@ namespace EPI.DataStructures.PriorityQueue
                 {
                     Node<T> parent = traverse.Parent;
                     Swap(parent: ref parent, child: ref traverse);
+                    traverse = parent;
                 }
                 else // heap property is maintained
                     return;
@@ -102,6 +103,14 @@ namespace EPI.DataStructures.PriorityQueue
             Node<T> oldChildRight = child.Right;
             parent = child;
             parent.Parent = oldParent.Parent;
+            if(oldParent.Parent != null)
+            {
+                if (oldParent.Parent.Left == oldParent)
+                    oldParent.Parent.Left = parent;
+                else
+                    oldParent.Parent.Right = parent;
+            }
+                
             if (wasLeftChild)
             {
                 parent.Left = oldParent;
@@ -118,6 +127,7 @@ namespace EPI.DataStructures.PriorityQueue
                 parent.Right.Parent = parent;
             oldParent.Left = oldChildLeft;
             oldParent.Right = oldChildRight;
+            child = oldParent;
 
             if (root == oldParent)
                 root = parent;
