@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Xunit;
 
 namespace EPI.DataStructures.PriorityQueue
 {
@@ -31,8 +32,9 @@ namespace EPI.DataStructures.PriorityQueue
 
     public class BinaryHeap<T> : IPriorityQueue<T> where T : IComparable
     {
-        Node<T> root;
+        private Node<T> root;
         private int count;
+        internal Node<T> Root => root;
         public int Count => count;
 
         public BinaryHeap()
@@ -62,25 +64,32 @@ namespace EPI.DataStructures.PriorityQueue
             Stack<bool> goLefts = getPathToNewLeaf();
             while (goLefts.Count > 1)
             {
-                //TODO
+                if (goLefts.Pop())
+                    traverse = traverse.Left;
+                else
+                    traverse = traverse.Right;
             }
             if (goLefts.Pop())
                 traverse.Left = newNode;
             else
                 traverse.Right = newNode;
             newNode.Parent = traverse;
+            count++;
 
             traverse = newNode;
             while (traverse.Parent != null)
             {
-                if (traverse.Value.CompareTo(traverse.Parent.Value) > 0)
-                    Swap(parent: traverse.Parent, child: traverse);
+                if (traverse.Value.CompareTo(traverse.Parent.Value) > 0) // this is a max-heap
+                {
+                    Node<T> parent = traverse.Parent;
+                    Swap(parent: ref parent, child: ref traverse);
+                }
                 else // heap property is maintained
                     return;
             }
         }
 
-        private void Swap(Node<T> parent, Node<T> child)
+        private void Swap(ref Node<T> parent, ref Node<T> child)
         {
             bool wasLeftChild;
             if (parent.Left == child)
@@ -88,26 +97,30 @@ namespace EPI.DataStructures.PriorityQueue
             else
                 wasLeftChild = false;
 
-            if (child.Parent == root)
+            Node<T> oldParent = parent;
+            Node<T> oldChildLeft = child.Left;
+            Node<T> oldChildRight = child.Right;
+            parent = child;
+            parent.Parent = oldParent.Parent;
+            if (wasLeftChild)
             {
-                Node<T> oldChildLeft = child.Left;
-                Node<T> oldChildRight = child.Right;
-                Node<T> oldRoot = root;
-                root = child;
-                root.Left = oldRoot.Left;
-                root.Right = oldRoot.Right;
-                root.Parent = null;
-                if (wasLeftChild)
-                    root.Left = oldRoot;
-                else
-                    root.Right = oldRoot;
-                oldRoot.Left = oldChildLeft;
-                oldRoot.Right = oldChildRight;
-                oldRoot.Parent = root;
-                return;
+                parent.Left = oldParent;
+                parent.Right = oldParent.Right;
             }
+            else
+            {
+                parent.Right = oldParent;
+                parent.Left = oldParent.Left;
+            }
+            if (parent.Left != null)
+                parent.Left.Parent = parent;
+            if (parent.Right != null)
+                parent.Right.Parent = parent;
+            oldParent.Left = oldChildLeft;
+            oldParent.Right = oldChildRight;
 
-
+            if (root == oldParent)
+                root = parent;
         }
 
         private Stack<bool> getPathToNewLeaf()
@@ -117,9 +130,9 @@ namespace EPI.DataStructures.PriorityQueue
             while (num > 0)
             {
                 if (num % 2 == 0)
-                    goLefts.Push(true);
-                else
                     goLefts.Push(false);
+                else
+                    goLefts.Push(true);
                 num = (num - 1) / 2;
             }
             return goLefts;
@@ -127,12 +140,67 @@ namespace EPI.DataStructures.PriorityQueue
 
         public T Pop()
         {
-            return default(T);
+            throw new NotImplementedException();
         }
     }
 
-    class BinaryHead_Tests
+    public class IntBinaryHeap : BinaryHeap<int>
     {
+        public void Push(int value)
+        {
+            Push(value, value);
+        }
+    }
 
+    public class BinaryHeap_Tests
+    {
+        //TODO use IoC container to use array-based PQ for tests
+
+        [Fact]
+        public void AddMaintainsHeapProperty()
+        {
+            IntBinaryHeap heap = new IntBinaryHeap();
+            heap.Push(5);
+            Assert.Equal(1, heap.Count);
+            Assert.Null(heap.Root.Parent);
+            Assert.Null(heap.Root.Left);
+            Assert.Null(heap.Root.Right);
+
+            heap.Push(10);
+            Assert.Equal(2, heap.Count);
+            Assert.Null(heap.Root.Parent);
+            Assert.Null(heap.Root.Right);
+            Assert.Equal(10, heap.Root.Value);
+            Assert.Equal(5, heap.Root.Left.Value);
+            Assert.Equal(heap.Root, heap.Root.Left.Parent);
+
+            heap.Push(20);
+            Assert.Equal(3, heap.Count);
+            Assert.Null(heap.Root.Parent);
+            Assert.Equal(20, heap.Root.Value);
+            Assert.Equal(5, heap.Root.Left.Value);
+            Assert.Equal(10, heap.Root.Right.Value);
+            Assert.Equal(heap.Root, heap.Root.Left.Parent);
+            Assert.Equal(heap.Root, heap.Root.Right.Parent);
+            Assert.Null(heap.Root.Left.Left);
+            Assert.Null(heap.Root.Left.Right);
+            Assert.Null(heap.Root.Right.Left);
+            Assert.Null(heap.Root.Right.Right);
+
+            heap.Push(99);
+            heap.Push(35);
+            heap.Push(777);
+            heap.Push(1);
+            Assert.Equal(7, heap.Count);
+            Assert.Null(heap.Root.Parent);
+            Assert.Equal(777, heap.Root.Value);
+            Assert.Equal(35, heap.Root.Left.Value);
+            Assert.Equal(99, heap.Root.Right.Value);
+            Assert.Equal(5, heap.Root.Left.Left.Value);
+            Assert.Equal(20, heap.Root.Left.Right.Value);
+            Assert.Equal(10, heap.Root.Right.Left.Value);
+            Assert.Equal(1, heap.Root.Right.Right.Value);
+
+        }
     }
 }
