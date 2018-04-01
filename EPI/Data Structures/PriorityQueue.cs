@@ -150,7 +150,32 @@ namespace EPI.DataStructures.PriorityQueue
 
         public T Pop()
         {
-            throw new NotImplementedException();
+            T result = root.Value;
+            count--;
+            if (count == 0)
+            {
+                root = null;
+                return result;
+            }
+
+            Node<T> finalLeaf = root;
+            Stack<bool> pathToFinalLeaf = getPathToNewLeaf();
+            bool finalLeafWasLeftChild = count % 2 == 1;
+            while (pathToFinalLeaf.Count > 0)
+            {
+                if (pathToFinalLeaf.Pop())
+                    finalLeaf = finalLeaf.Left;
+                else
+                    finalLeaf = finalLeaf.Right;
+            }
+            finalLeaf.Left = root.Left;
+            finalLeaf.Right = root.Right;
+            finalLeaf.Parent = null;
+            root = finalLeaf;
+            root.Left.Parent = root;
+            root.Right.Parent = root;
+
+            return result;
         }
     }
 
@@ -210,7 +235,65 @@ namespace EPI.DataStructures.PriorityQueue
             Assert.Equal(20, heap.Root.Left.Right.Value);
             Assert.Equal(10, heap.Root.Right.Left.Value);
             Assert.Equal(1, heap.Root.Right.Right.Value);
+            Assert.Null(heap.Root.Left.Left.Left);
+            Assert.Null(heap.Root.Left.Left.Right);
+            Assert.Null(heap.Root.Left.Right.Left);
+            Assert.Null(heap.Root.Left.Right.Right);
+            Assert.Null(heap.Root.Right.Left.Left);
+            Assert.Null(heap.Root.Right.Left.Right);
+            Assert.Null(heap.Root.Right.Right.Left);
+            Assert.Null(heap.Root.Right.Right.Right);
 
         }
+
+        [Fact]
+        public void PopBasics()
+        {
+            IntBinaryHeap heap = new IntBinaryHeap();
+            heap.Push(5);
+            Assert.Equal(1, heap.Count);
+            Assert.Null(heap.Root.Parent);
+            Assert.Null(heap.Root.Left);
+            Assert.Null(heap.Root.Right);
+
+            Assert.Equal(5, heap.Pop());
+            Assert.Equal(0, heap.Count);
+            Assert.Null(heap.Root);
+        }
+
+        [Fact]
+        public void PopMaintainsHeapProperty()
+        {
+            IntBinaryHeap heap = new IntBinaryHeap();
+            heap.Push(5);
+            heap.Push(10);
+            heap.Push(20);
+            Assert.Equal(20, heap.Pop());
+            Assert.Equal(10, heap.Pop());
+            Assert.Equal(5, heap.Pop());
+            Assert.Equal(0, heap.Count);
+        }
+
+        [Fact]
+        public void PopMaintainsHeapProperty02()
+        {
+            IntBinaryHeap heap = new IntBinaryHeap();
+            heap.Push(5);
+            heap.Push(10);
+            heap.Push(20);
+            heap.Push(99);
+            heap.Push(35);
+            heap.Push(777);
+            heap.Push(1);
+            Assert.Equal(777, heap.Pop());
+            Assert.Equal(99, heap.Pop());
+            Assert.Equal(35, heap.Pop());
+            Assert.Equal(20, heap.Pop());
+            Assert.Equal(10, heap.Pop());
+            Assert.Equal(5, heap.Pop());
+            Assert.Equal(1, heap.Pop());
+            Assert.Equal(0, heap.Count);
+        }
     }
+
 }
