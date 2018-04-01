@@ -170,10 +170,65 @@ namespace EPI.DataStructures.PriorityQueue
             }
             finalLeaf.Left = root.Left;
             finalLeaf.Right = root.Right;
+            if (finalLeafWasLeftChild)
+                finalLeaf.Parent.Left = null;
+            else
+                finalLeaf.Parent.Right = null;
+
+            if (finalLeaf.Left == finalLeaf)
+                finalLeaf.Left = null;
+            else if (finalLeaf.Right == finalLeaf)
+                finalLeaf.Right = null;
+
             finalLeaf.Parent = null;
             root = finalLeaf;
-            root.Left.Parent = root;
-            root.Right.Parent = root;
+            if(root.Left != null)
+                root.Left.Parent = root;
+            if(root.Right != null)
+                root.Right.Parent = root;
+
+            Node<T> parent = root;
+            Node<T> child = null;
+            bool goLeft;
+            while(parent != null)
+            {
+                if (parent.Left != null && parent.Right != null)
+                {
+                    if (parent.Left.Value.CompareTo(parent.Right.Value) > 0)
+                    {
+                        child = parent.Left;
+                        goLeft = true;
+                    }
+                    else
+                    {
+                        child = parent.Right;
+                        goLeft = false;
+                    }
+                }
+                else if (parent.Left != null)
+                {
+                    child = parent.Left;
+                    goLeft = true;
+                }
+                else if (parent.Right != null)
+                {
+                    child = parent.Right;
+                    goLeft = false;
+                }
+                else // no children
+                    break;
+
+                if (child.Value.CompareTo(parent.Value) > 0)
+                {
+                    bool wasRoot = parent == root;
+                    Swap(parent: ref parent, child: ref child);
+                    if (wasRoot)
+                        root = parent;
+                    parent = child;
+                    continue;
+                }
+                break;
+            }
 
             return result;
         }
