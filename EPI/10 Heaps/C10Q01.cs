@@ -12,7 +12,6 @@ namespace EPI.C10_Heaps
     {
         public static List<int> SortedMerge(int[][] files)
         {
-            int[] fileNextIndex = new int[files.Length];
             BinaryHeap<LineItem> heap = new BinaryHeap<LineItem>();
             List<int> result = new List<int>();
 
@@ -21,8 +20,7 @@ namespace EPI.C10_Heaps
                 if (files[i].Length > 0)
                 {
                     int value = files[i][0];
-                    heap.Push(value, new LineItem(value: value, fileNum: i));
-                    fileNextIndex[i] = 1;
+                    heap.Push(value, new LineItem(value: value, fileNum: i, nextIndex: 1));
                 }
             }
 
@@ -32,22 +30,16 @@ namespace EPI.C10_Heaps
                 result.Add(item.Value);
 
                 int fileNum = item.FileNum;
-                if (fileNextIndex[fileNum] < files[fileNum].Length)
+                int fileIndex = item.NextIndex;
+                if (fileIndex < files[fileNum].Length)
                 {
-                    int value = files[fileNum][fileNextIndex[fileNum]];
-                    heap.Push(value, new LineItem(value, fileNum));
-                    fileNextIndex[fileNum]++;
+                    int value = files[fileNum][fileIndex];
+                    heap.Push(value, new LineItem(value, fileNum, fileIndex + 1));
                 }
             }
 
             return result;
         }
-
-        //public class LineItem
-        //{
-        //    public int Value { get; }
-        //    public int FromArrayNum { get; }
-        //}
 
         public struct LineItem : IComparable
         {
@@ -55,7 +47,7 @@ namespace EPI.C10_Heaps
             public int FileNum { get; }
             public int NextIndex { get; }
 
-            public LineItem(int value, int fileNum, int nextIndex = 0) //TODO use nextIndex property instead of that array
+            public LineItem(int value, int fileNum, int nextIndex)
             {
                 Value = value;
                 FileNum = fileNum;
