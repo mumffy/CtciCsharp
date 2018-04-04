@@ -84,6 +84,7 @@
     <Compile Include="09 Binary Trees\C09Q04.cs" />
     <Compile Include="09 Binary Trees\C09Q03.cs" />
     <Compile Include="09 Binary Trees\C09Q01.cs" />
+    <Compile Include="10 Heaps\C10Q01.cs" />
     <Compile Include="Data Structures\BinaryTree.cs" />
     <Compile Include="Data Structures\LinkedList.cs" />
     <Compile Include="Data Structures\PriorityQueue.cs" />
