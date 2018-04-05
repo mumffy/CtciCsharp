@@ -30,14 +30,14 @@ namespace EPI.DataStructures.PriorityQueue
         }
     }
 
-    public class BinaryHeap<T> : IPriorityQueue<T> where T : IComparable
+    public class BinaryMaxHeap<T> : IPriorityQueue<T> where T : IComparable
     {
         private Node<T> root;
         private int count;
         internal Node<T> Root => root;
         public int Count => count;
 
-        public BinaryHeap()
+        public BinaryMaxHeap()
         {
             count = 0;
         }
@@ -79,7 +79,7 @@ namespace EPI.DataStructures.PriorityQueue
             traverse = newNode;
             while (traverse.Parent != null)
             {
-                if (traverse.Value.CompareTo(traverse.Parent.Value) > 0) // this is a max-heap
+                if (lhsMaintainsHeapProperty(traverse.Value, traverse.Parent.Value))
                 {
                     Node<T> parent = traverse.Parent;
                     Swap(parent: ref parent, child: ref traverse);
@@ -103,14 +103,14 @@ namespace EPI.DataStructures.PriorityQueue
             Node<T> oldChildRight = child.Right;
             parent = child;
             parent.Parent = oldParent.Parent;
-            if(oldParent.Parent != null)
+            if (oldParent.Parent != null)
             {
                 if (oldParent.Parent.Left == oldParent)
                     oldParent.Parent.Left = parent;
                 else
                     oldParent.Parent.Right = parent;
             }
-                
+
             if (wasLeftChild)
             {
                 parent.Left = oldParent;
@@ -148,6 +148,13 @@ namespace EPI.DataStructures.PriorityQueue
             return goLefts;
         }
 
+        virtual protected bool lhsMaintainsHeapProperty(T lhs, T rhs)
+        {
+            if (lhs.CompareTo(rhs) > 0)
+                return true;
+            return false;
+        }
+
         public T Pop()
         {
             T result = root.Value;
@@ -182,19 +189,19 @@ namespace EPI.DataStructures.PriorityQueue
 
             finalLeaf.Parent = null;
             root = finalLeaf;
-            if(root.Left != null)
+            if (root.Left != null)
                 root.Left.Parent = root;
-            if(root.Right != null)
+            if (root.Right != null)
                 root.Right.Parent = root;
 
             Node<T> parent = root;
             Node<T> child = null;
             bool goLeft;
-            while(parent != null)
+            while (parent != null)
             {
                 if (parent.Left != null && parent.Right != null)
                 {
-                    if (parent.Left.Value.CompareTo(parent.Right.Value) > 0)
+                    if (lhsMaintainsHeapProperty(parent.Left.Value, parent.Right.Value))
                     {
                         child = parent.Left;
                         goLeft = true;
@@ -218,7 +225,7 @@ namespace EPI.DataStructures.PriorityQueue
                 else // no children
                     break;
 
-                if (child.Value.CompareTo(parent.Value) > 0)
+                if (lhsMaintainsHeapProperty(child.Value, parent.Value))
                 {
                     bool wasRoot = parent == root;
                     Swap(parent: ref parent, child: ref child);
@@ -234,11 +241,52 @@ namespace EPI.DataStructures.PriorityQueue
         }
     }
 
-    public class IntBinaryHeap : BinaryHeap<int>
+    public class BinaryMinHeap<T> : BinaryMaxHeap<T> where T : IComparable
     {
-        public void Push(int value)
+        override protected bool lhsMaintainsHeapProperty(T lhs, T rhs)
         {
-            Push(value, value);
+            if (lhs.CompareTo(rhs) < 0)
+                return true;
+            return false;
+        }
+    }
+
+    public abstract class IntBinaryHeap : IPriorityQueue<int>
+    {
+        protected IPriorityQueue<int> pq;
+        public int Count => pq.Count;
+        public int Peek()
+        {
+            return pq.Peek();
+        }
+        public int Pop()
+        {
+            return pq.Pop();
+        }
+        public void Push(int number)
+        {
+            pq.Push(number, number);
+        }
+        public void Push(int priority, int number)
+        {
+            Push(number);
+        }
+    }
+
+    public class IntBinaryMaxHeap : IntBinaryHeap
+    {
+        internal Node<int> Root => (pq as BinaryMaxHeap<int>).Root;
+        public IntBinaryMaxHeap() : base()
+        {
+            pq = new BinaryMaxHeap<int>();
+        }
+    }
+
+    public class IntBinaryMinHeap : IntBinaryHeap
+    {
+        public IntBinaryMinHeap() : base()
+        {
+            pq = new BinaryMinHeap<int>();
         }
     }
 
@@ -249,7 +297,7 @@ namespace EPI.DataStructures.PriorityQueue
         [Fact]
         public void AddMaintainsHeapProperty()
         {
-            IntBinaryHeap heap = new IntBinaryHeap();
+            IntBinaryMaxHeap heap = new IntBinaryMaxHeap();
             heap.Push(5);
             Assert.Equal(1, heap.Count);
             Assert.Null(heap.Root.Parent);
@@ -304,7 +352,7 @@ namespace EPI.DataStructures.PriorityQueue
         [Fact]
         public void PopBasics()
         {
-            IntBinaryHeap heap = new IntBinaryHeap();
+            IntBinaryMaxHeap heap = new IntBinaryMaxHeap();
             heap.Push(5);
             Assert.Equal(1, heap.Count);
             Assert.Null(heap.Root.Parent);
@@ -319,7 +367,7 @@ namespace EPI.DataStructures.PriorityQueue
         [Fact]
         public void PopMaintainsHeapProperty()
         {
-            IntBinaryHeap heap = new IntBinaryHeap();
+            IntBinaryMaxHeap heap = new IntBinaryMaxHeap();
             heap.Push(5);
             heap.Push(10);
             heap.Push(20);
@@ -332,7 +380,7 @@ namespace EPI.DataStructures.PriorityQueue
         [Fact]
         public void PopMaintainsHeapProperty02()
         {
-            IntBinaryHeap heap = new IntBinaryHeap();
+            IntBinaryMaxHeap heap = new IntBinaryMaxHeap();
             heap.Push(5);
             heap.Push(10);
             heap.Push(20);
@@ -347,6 +395,27 @@ namespace EPI.DataStructures.PriorityQueue
             Assert.Equal(10, heap.Pop());
             Assert.Equal(5, heap.Pop());
             Assert.Equal(1, heap.Pop());
+            Assert.Equal(0, heap.Count);
+        }
+
+        [Fact]
+        public void PopMaintainsMinHeapProperty()
+        {
+            IntBinaryMinHeap heap = new IntBinaryMinHeap();
+            heap.Push(5);
+            heap.Push(10);
+            heap.Push(20);
+            heap.Push(99);
+            heap.Push(35);
+            heap.Push(777);
+            heap.Push(1);
+            Assert.Equal(1, heap.Pop());
+            Assert.Equal(5, heap.Pop());
+            Assert.Equal(10, heap.Pop());
+            Assert.Equal(20, heap.Pop());
+            Assert.Equal(35, heap.Pop());
+            Assert.Equal(99, heap.Pop());
+            Assert.Equal(777, heap.Pop());
             Assert.Equal(0, heap.Count);
         }
     }

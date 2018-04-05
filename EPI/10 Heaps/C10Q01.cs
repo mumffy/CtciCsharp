@@ -12,7 +12,7 @@ namespace EPI.C10_Heaps
     {
         public static List<int> SortedMerge(int[][] files)
         {
-            BinaryHeap<LineItem> heap = new BinaryHeap<LineItem>();
+            BinaryMaxHeap<LineItem> heap = new BinaryMaxHeap<LineItem>();
             List<int> result = new List<int>();
 
             for (int i = 0; i < files.Length; i++)
