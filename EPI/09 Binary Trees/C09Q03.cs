@@ -184,7 +184,7 @@ namespace EPI.C09_Binary_Trees
             Assert.NotNull(k);
 
             Node<string> lcaNode = Q03<string>.FindLCA(tree, k, tree.Root);
-            Assert.Equal(null, lcaNode);
+            Assert.Null(lcaNode);
         }
 
         [Fact]

@@ -196,7 +196,6 @@ namespace EPI.DataStructures.PriorityQueue
 
             Node<T> parent = root;
             Node<T> child = null;
-            bool goLeft;
             while (parent != null)
             {
                 if (parent.Left != null && parent.Right != null)
@@ -204,23 +203,19 @@ namespace EPI.DataStructures.PriorityQueue
                     if (lhsMaintainsHeapProperty(parent.Left.Value, parent.Right.Value))
                     {
                         child = parent.Left;
-                        goLeft = true;
                     }
                     else
                     {
                         child = parent.Right;
-                        goLeft = false;
                     }
                 }
                 else if (parent.Left != null)
                 {
                     child = parent.Left;
-                    goLeft = true;
                 }
                 else if (parent.Right != null)
                 {
                     child = parent.Right;
-                    goLeft = false;
                 }
                 else // no children
                     break;
