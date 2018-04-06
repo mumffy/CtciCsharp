@@ -87,6 +87,7 @@
     <Compile Include="10 Heaps\C10Q04.cs" />
     <Compile Include="10 Heaps\C10Q03.cs" />
     <Compile Include="10 Heaps\C10Q01.cs" />
+    <Compile Include="11 Searching\C11Q03.cs" />
     <Compile Include="11 Searching\C11Q08.cs" />
     <Compile Include="11 Searching\C11Q04.cs" />
     <Compile Include="11 Searching\C11Q01.cs" />
