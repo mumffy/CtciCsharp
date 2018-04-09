@@ -91,6 +91,7 @@
     <Compile Include="11 Searching\C11Q08.cs" />
     <Compile Include="11 Searching\C11Q04.cs" />
     <Compile Include="11 Searching\C11Q01.cs" />
+    <Compile Include="12 Hash Tables\C12Q06.cs" />
     <Compile Include="12 Hash Tables\C12Q02.cs" />
     <Compile Include="12 Hash Tables\C12Q01.cs" />
     <Compile Include="Data Structures\BinaryTree.cs" />
