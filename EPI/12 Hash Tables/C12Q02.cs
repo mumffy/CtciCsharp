@@ -14,7 +14,6 @@ namespace EPI.C12_HashTables
         // [A] punctuation must also be "clipped" from the magazine
         public static bool CanMakePsychoLetter(string letter, string magazine)
         {
-            int remainingChars = 0;
             Dictionary<char, int> charCount = new Dictionary<char, int>();
             char c;
 
@@ -27,22 +26,24 @@ namespace EPI.C12_HashTables
                 if (!charCount.ContainsKey(c))
                     charCount[c] = 0;
                 charCount[c]++;
-                remainingChars++;
             }
 
             foreach(char theChar in magazine)
             {
-                if (char.IsWhiteSpace(theChar))
+                c = char.ToLower(theChar);
+
+                if (char.IsWhiteSpace(c) || !charCount.ContainsKey(c))
                     continue;
 
-                c = char.ToLower(theChar);
-                if(charCount[c] > 0)
-                {
-                    charCount[c]--;
-                    remainingChars--;
-                }
+                charCount[c]--;
+                if (charCount[c] == 0)
+                    charCount.Remove(c);
+
+                if (charCount.Count == 0)
+                    return true;
             }
-            return remainingChars == 0;
+
+            return charCount.Count == 0;
         }
     }
 
