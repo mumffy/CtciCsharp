@@ -175,4 +175,94 @@ namespace EPI.DataStructures.LinkedList
             Assert.Equal(9, list.ToInt());
         }
     }
+
+    public class DoublyLinkedList<T>
+    {
+        private int count;
+        private DoublyLinkedListNode<T> head;
+        private DoublyLinkedListNode<T> tail;
+
+        public int Count => count;
+        public DoublyLinkedListNode<T> Head => head;
+        public DoublyLinkedListNode<T> Tail => tail;
+
+        public DoublyLinkedListNode<T> AddToTail(T value)
+        {
+            var newNode = new DoublyLinkedListNode<T>(value);
+            if (head == null)
+            {
+                head = newNode;
+            }
+            if (tail != null)
+            {
+                var oldTail = tail;
+                newNode.Prev = oldTail;
+                oldTail.Next = newNode;
+            }
+            tail = newNode;
+            count++;
+            return newNode;
+        }
+
+        public DoublyLinkedListNode<T> RemoveHead()
+        {
+            var oldHead = head;
+            head = head.Next;
+            head.Prev = null;
+            count--;
+            return oldHead;
+        }
+
+        public void MoveToTail(DoublyLinkedListNode<T> node)
+        {
+            if (node == tail)
+                return;
+
+            if(node.Prev != null)
+                node.Prev.Next = node.Next;
+
+            if (node.Next != null)
+                node.Next.Prev = node.Prev;
+
+            tail.Next = node;
+            tail.Next.Prev = tail;
+            tail = node;
+            tail.Next = null;
+        }
+    }
+
+    public class DoublyLinkedListNode<T>
+    {
+        public DoublyLinkedListNode<T> Prev { get; set; }
+        public DoublyLinkedListNode<T> Next { get; set; }
+        public T Value { get; }
+        public DoublyLinkedListNode(T value)
+        {
+            Value = value;
+        }
+    }
+
+    public class DoublyLinkedListTests
+    {
+        DoublyLinkedList<string> dll = new DoublyLinkedList<string>();
+
+        [Fact]
+        public void Basics()
+        {
+            Assert.Equal(0, dll.Count);
+
+            dll.AddToTail("apple");
+            Assert.Equal(1, dll.Count);
+            Assert.Null(dll.Head.Prev);
+            Assert.Null(dll.Head.Next);
+
+            dll.AddToTail("banana");
+            var coconutNode = dll.AddToTail("coconut");
+            dll.AddToTail("durian");
+            dll.AddToTail("eggplant");
+
+        }
+
+    }
 }
+
