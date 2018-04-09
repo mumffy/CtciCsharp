@@ -189,6 +189,11 @@ namespace EPI.DataStructures.LinkedList
         public DoublyLinkedListNode<T> AddToTail(T value)
         {
             var newNode = new DoublyLinkedListNode<T>(value);
+            return AddToTail(newNode);
+        }
+
+        public DoublyLinkedListNode<T> AddToTail(DoublyLinkedListNode<T> newNode)
+        {
             if (head == null)
             {
                 head = newNode;
@@ -202,6 +207,24 @@ namespace EPI.DataStructures.LinkedList
             tail = newNode;
             count++;
             return newNode;
+        }
+
+        public DoublyLinkedListNode<T> Remove(DoublyLinkedListNode<T> node)
+        {
+            if (count == 0)
+                return null;
+
+            if (node == head)
+                return RemoveHead();
+
+            if (node.Prev != null)
+                node.Prev.Next = node.Next;
+
+            if (node.Next != null)
+                node.Next.Prev = node.Prev;
+
+            count--;
+            return node;
         }
 
         public DoublyLinkedListNode<T> RemoveHead()
@@ -387,6 +410,35 @@ namespace EPI.DataStructures.LinkedList
             Assert.Null(dll.Head.Prev);
 
             var removedCoconut = dll.RemoveHead();
+            Assert.Equal(0, dll.Count);
+            Assert.Equal(coconut, removedCoconut);
+            Assert.Null(dll.Head);
+            Assert.Null(dll.Tail);
+        }
+
+        [Fact]
+        public void Remove()
+        {
+            var apple = dll.AddToTail("apple");
+            var banana = dll.AddToTail("banana");
+            var coconut = dll.AddToTail("coconut");
+            Assert.Equal(3, dll.Count);
+
+            var removedBanana = dll.Remove(banana);
+            Assert.Equal(2, dll.Count);
+            Assert.Equal(banana, removedBanana);
+            Assert.Equal("banana", removedBanana.Value);
+            Assert.Equal(apple, dll.Head);
+            Assert.Null(dll.Head.Prev);
+
+            var removedApple = dll.Remove(apple);
+            Assert.Equal(1, dll.Count);
+            Assert.Equal(apple, removedApple);
+            Assert.Equal(coconut, dll.Head);
+            Assert.Equal(coconut, dll.Tail);
+            Assert.Null(dll.Head.Prev);
+
+            var removedCoconut = dll.Remove(coconut);
             Assert.Equal(0, dll.Count);
             Assert.Equal(coconut, removedCoconut);
             Assert.Null(dll.Head);

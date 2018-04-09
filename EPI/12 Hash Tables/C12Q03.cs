@@ -42,7 +42,7 @@ namespace EPI.C12_HashTables
         {
             bool found = books.ContainsKey(isbn);
             if (found)
-                books[isbn].Value.UpdateLastUsedTime();
+                UpdateBookUsage(isbn);
             return found;
         }
 
@@ -58,20 +58,32 @@ namespace EPI.C12_HashTables
             {
                 if (books.Count == CacheSize)
                     evictLruBook(books);
-                books[isbn] = new DoublyLinkedListNode<Book>(new Book(isbn, price));
+
+                var newBookNode = new DoublyLinkedListNode<Book>(new Book(isbn, price));
+                books[isbn] = newBookNode;
+                lruBooks.AddToTail(newBookNode);
             }
-            books[isbn].Value.UpdateLastUsedTime();
+            UpdateBookUsage(isbn);
         }
 
         private void evictLruBook(Dictionary<string, DoublyLinkedListNode<Book>> books)
         {
-            string lruIsbn = books.OrderBy(x => x.Value.Value.LastUsed).First().Key;
-            books.Remove(lruIsbn);
+            //string lruIsbn = books.OrderBy(x => x.Value.Value.LastUsed).First().Key;
+            var lru = lruBooks.RemoveHead();
+            books.Remove(lru.Value.Isbn);
         }
 
         public void Remove(string isbn)
         {
+            var removalNode = books[isbn];
+            lruBooks.Remove(removalNode);
             books.Remove(isbn);
+        }
+
+        private void UpdateBookUsage(string isbn)
+        {
+            books[isbn].Value.UpdateLastUsedTime();
+            lruBooks.MoveToTail(books[isbn]);
         }
 
         private class Book
