@@ -52,7 +52,11 @@ namespace EPI.C12_HashTables
         [InlineData("abc",
                     "cacabc", true)]
         [InlineData("abc",
+                    "cacabcd", true)]
+        [InlineData("abc",
                     "caca", false)]
+        [InlineData("abc",
+                    "cacad", false)]
         public void Example(string letter, string magazine, bool expected)
         {
             Assert.Equal(expected, Q02.CanMakePsychoLetter(letter, magazine));
