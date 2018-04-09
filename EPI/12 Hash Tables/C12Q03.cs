@@ -18,9 +18,24 @@ namespace EPI.C12_HashTables
 
     class Q03IsbnCache : IBookNumberCache
     {
-        private Dictionary<string, Book> books = new Dictionary<string, Book>();
+        private static int fakeTime = 0;
+        public static int FakeTime
+        {
+            get
+            {
+                fakeTime++;
+                return fakeTime;
+            }
+        }
+
+        private Dictionary<string, Book> books;
         public int CacheSize { get; }
-        private Book lruBook;
+
+        public Q03IsbnCache(int size)
+        {
+            books = new Dictionary<string, Book>();
+            CacheSize = size;
+        }
 
         public bool Contains(string isbn)
         {
@@ -49,7 +64,8 @@ namespace EPI.C12_HashTables
 
         private void evictLruBook(Dictionary<string, Book> books)
         {
-            throw new NotImplementedException();
+            string lruIsbn = books.OrderBy(x => x.Value.LastUsed).First().Key;
+            books.Remove(lruIsbn);
         }
 
         public void Remove(string isbn)
@@ -59,27 +75,42 @@ namespace EPI.C12_HashTables
 
         private class Book
         {
-            private DateTime lastUsed;
             public string Isbn { get; }
             public int Price { get; }
-            public DateTime LastUsed => lastUsed;
+            //private DateTime lastUsed;
+
+            //public DateTime LastUsed => lastUsed;
+            private int lastUsed;
+            public int LastUsed => lastUsed;
 
             public Book(string isbn, int price)
             {
                 Isbn = isbn;
                 Price = price;
-                //UpdateLastUsedTime();
             }
 
             internal void UpdateLastUsedTime()
             {
-                lastUsed = DateTime.UtcNow;
+                lastUsed = FakeTime;
             }
         }
     }
 
     public class C12Q03_Tests
     {
-
+        [Fact]
+        public void LruBookIsRemoved()
+        {
+            Q03IsbnCache cache = new Q03IsbnCache(3);
+            cache.Insert("a", 0);
+            cache.Insert("b", 0);
+            cache.Insert("c", 0);
+            cache.Contains("a");
+            cache.Insert("d", 0);
+            Assert.False(cache.Contains("b"));
+            Assert.True(cache.Contains("a"));
+            Assert.True(cache.Contains("c"));
+            Assert.True(cache.Contains("d"));
+        }
     }
 }
