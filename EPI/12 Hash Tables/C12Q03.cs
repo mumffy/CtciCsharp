@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Linq;
 using Xunit;
+using EPI.DataStructures.LinkedList;
+using System.Collections.Generic;
 
 namespace EPI.C12_HashTables
 {
@@ -28,12 +26,15 @@ namespace EPI.C12_HashTables
             }
         }
 
-        private Dictionary<string, Book> books;
+        private DoublyLinkedList<Book> lruBooks;
+        private Dictionary<string, DoublyLinkedListNode<Book>> books;
         public int CacheSize { get; }
+        public int Count => books.Count;
 
         public Q03IsbnCache(int size)
         {
-            books = new Dictionary<string, Book>();
+            books = new Dictionary<string, DoublyLinkedListNode<Book>>();
+            lruBooks = new DoublyLinkedList<Book>();
             CacheSize = size;
         }
 
@@ -41,14 +42,14 @@ namespace EPI.C12_HashTables
         {
             bool found = books.ContainsKey(isbn);
             if (found)
-                books[isbn].UpdateLastUsedTime();
+                books[isbn].Value.UpdateLastUsedTime();
             return found;
         }
 
         public int GetPrice(string isbn)
         {
             Contains(isbn);
-            return books[isbn].Price;
+            return books[isbn].Value.Price;
         }
 
         public void Insert(string isbn, int price)
@@ -57,14 +58,14 @@ namespace EPI.C12_HashTables
             {
                 if (books.Count == CacheSize)
                     evictLruBook(books);
-                books[isbn] = new Book(isbn, price);
+                books[isbn] = new DoublyLinkedListNode<Book>(new Book(isbn, price));
             }
-            books[isbn].UpdateLastUsedTime();
+            books[isbn].Value.UpdateLastUsedTime();
         }
 
-        private void evictLruBook(Dictionary<string, Book> books)
+        private void evictLruBook(Dictionary<string, DoublyLinkedListNode<Book>> books)
         {
-            string lruIsbn = books.OrderBy(x => x.Value.LastUsed).First().Key;
+            string lruIsbn = books.OrderBy(x => x.Value.Value.LastUsed).First().Key;
             books.Remove(lruIsbn);
         }
 
@@ -102,7 +103,7 @@ namespace EPI.C12_HashTables
         public void LruBookIsRemoved()
         {
             Q03IsbnCache cache = new Q03IsbnCache(3);
-            cache.Insert("a", 0);
+            cache.Insert("a", 123);
             cache.Insert("b", 0);
             cache.Insert("c", 0);
             cache.Contains("a");
@@ -111,6 +112,18 @@ namespace EPI.C12_HashTables
             Assert.True(cache.Contains("a"));
             Assert.True(cache.Contains("c"));
             Assert.True(cache.Contains("d"));
+
+            cache.Insert("a", 999);
+            cache.Insert("x", 0);
+            Assert.False(cache.Contains("c"));
+            Assert.True(cache.Contains("d"));
+            Assert.True(cache.Contains("a"));
+            Assert.True(cache.Contains("x"));
+            Assert.Equal(123, cache.GetPrice("a"));
+
+            Assert.Equal(3, cache.Count);
+            cache.Remove("a");
+            Assert.Equal(2, cache.Count);
         }
     }
 }
