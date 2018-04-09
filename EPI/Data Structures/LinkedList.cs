@@ -206,19 +206,33 @@ namespace EPI.DataStructures.LinkedList
 
         public DoublyLinkedListNode<T> RemoveHead()
         {
+            if (count == 0)
+                return null;
+
             var oldHead = head;
-            head = head.Next;
-            head.Prev = null;
+            if (head == tail)
+            {
+                head = null;
+                tail = null;
+            }
+            else
+            {
+                head = head.Next;
+                head.Prev = null;
+            }
             count--;
             return oldHead;
         }
 
         public void MoveToTail(DoublyLinkedListNode<T> node)
         {
-            if (node == tail)
+            if (node == tail || Count == 0)
                 return;
 
-            if(node.Prev != null)
+            if (node == head)
+                head = node.Next;
+
+            if (node.Prev != null)
                 node.Prev.Next = node.Next;
 
             if (node.Next != null)
@@ -244,7 +258,11 @@ namespace EPI.DataStructures.LinkedList
 
     public class DoublyLinkedListTests
     {
-        DoublyLinkedList<string> dll = new DoublyLinkedList<string>();
+        DoublyLinkedList<string> dll;
+        public DoublyLinkedListTests()
+        {
+            dll = new DoublyLinkedList<string>();
+        }
 
         [Fact]
         public void Basics()
@@ -263,6 +281,117 @@ namespace EPI.DataStructures.LinkedList
 
         }
 
+        [Fact]
+        public void MoveToTail_AlreadyTail()
+        {
+            Assert.Equal(0, dll.Count);
+
+            var apple = dll.AddToTail("apple");
+            var banana = dll.AddToTail("banana");
+            var coconut = dll.AddToTail("coconut");
+
+            dll.MoveToTail(coconut);
+
+            Assert.Equal(3, dll.Count);
+            Assert.Equal(apple, dll.Head);
+            Assert.Equal(banana, dll.Head.Next);
+            Assert.Equal(coconut, dll.Head.Next.Next);
+            Assert.Equal(coconut, dll.Tail);
+        }
+
+        [Fact]
+        public void MoveToTail_FromHead()
+        {
+            var apple = dll.AddToTail("apple");
+            var banana = dll.AddToTail("banana");
+            var coconut = dll.AddToTail("coconut");
+
+            dll.MoveToTail(apple);
+
+            Assert.Equal(3, dll.Count);
+            Assert.Equal(banana, dll.Head);
+            Assert.Equal(coconut, dll.Head.Next);
+            Assert.Equal(apple, dll.Head.Next.Next);
+            Assert.Equal(apple, dll.Tail);
+            Assert.Equal(coconut, dll.Tail.Prev);
+            Assert.Equal(banana, dll.Tail.Prev.Prev);
+        }
+
+        [Fact]
+        public void MoveToTail_FromMiddle()
+        {
+            var apple = dll.AddToTail("apple");
+            var banana = dll.AddToTail("banana");
+            var coconut = dll.AddToTail("coconut");
+
+            dll.MoveToTail(banana);
+
+            Assert.Equal(3, dll.Count);
+            Assert.Equal(apple, dll.Head);
+            Assert.Equal(coconut, dll.Head.Next);
+            Assert.Equal(banana, dll.Head.Next.Next);
+            Assert.Equal(banana, dll.Tail);
+            Assert.Equal(coconut, dll.Tail.Prev);
+            Assert.Equal(apple, dll.Tail.Prev.Prev);
+        }
+
+
+        [Fact]
+        public void MoveToTail_FromHeadThenFromMiddle()
+        {
+            var apple = dll.AddToTail("apple");
+            var banana = dll.AddToTail("banana");
+            var coconut = dll.AddToTail("coconut");
+
+            dll.MoveToTail(apple);
+
+            Assert.Equal(3, dll.Count);
+            Assert.Equal(banana, dll.Head);
+            Assert.Equal(coconut, dll.Head.Next);
+            Assert.Equal(apple, dll.Head.Next.Next);
+            Assert.Equal(apple, dll.Tail);
+            Assert.Equal(coconut, dll.Tail.Prev);
+            Assert.Equal(banana, dll.Tail.Prev.Prev);
+
+            dll.MoveToTail(coconut);
+
+            Assert.Equal(3, dll.Count);
+            Assert.Equal(banana, dll.Head);
+            Assert.Equal(apple, dll.Head.Next);
+            Assert.Equal(coconut, dll.Head.Next.Next);
+            Assert.Equal(coconut, dll.Tail);
+            Assert.Equal(apple, dll.Tail.Prev);
+            Assert.Equal(banana, dll.Tail.Prev.Prev);
+        }
+
+        [Fact]
+        public void RemoveHead()
+        {
+            var apple = dll.AddToTail("apple");
+            var banana = dll.AddToTail("banana");
+            var coconut = dll.AddToTail("coconut");
+            Assert.Equal(3, dll.Count);
+
+            var removedApple = dll.RemoveHead();
+            Assert.Equal(2, dll.Count);
+            Assert.Equal(apple, removedApple);
+            Assert.Equal("apple", removedApple.Value);
+            Assert.Equal(banana, dll.Head);
+            Assert.Null(dll.Head.Prev);
+
+            var removedBanana = dll.RemoveHead();
+            Assert.Equal(1, dll.Count);
+            Assert.Equal(banana, removedBanana);
+            Assert.Equal("banana", removedBanana.Value);
+            Assert.Equal(coconut, dll.Head);
+            Assert.Null(dll.Head.Prev);
+
+            var removedCoconut = dll.RemoveHead();
+            Assert.Equal(0, dll.Count);
+            Assert.Equal(coconut, removedCoconut);
+            Assert.Null(dll.Head);
+            Assert.Null(dll.Tail);
+        }
     }
 }
 
