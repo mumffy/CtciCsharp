@@ -95,6 +95,7 @@
     <Compile Include="12 Hash Tables\C12Q06.cs" />
     <Compile Include="12 Hash Tables\C12Q02.cs" />
     <Compile Include="12 Hash Tables\C12Q01.cs" />
+    <Compile Include="13 Sorting\C13Q01.cs" />
     <Compile Include="Data Structures\BinaryTree.cs" />
     <Compile Include="Data Structures\LinkedList.cs" />
     <Compile Include="Data Structures\PriorityQueue.cs" />
