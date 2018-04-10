@@ -51,7 +51,7 @@ namespace EPI.C13_Sorting
             return results.ToArray();
         }
 
-        public static void AddIfNotPresent(this List<int> list, int number)
+        private static void AddIfNotPresent(this List<int> list, int number)
         {
             if (list.Count == 0 || list[list.Count - 1] < number)
                 list.Add(number);
