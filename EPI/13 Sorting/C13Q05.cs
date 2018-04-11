@@ -10,13 +10,17 @@ namespace EPI.C13_Sorting
         public static int FindMaxConcurrentEvents(Event[] events)
         {
             List<Point> points = new List<Point>();
+            int roomsInUse = 0;
+            int maxConcurrentRooms = 0;
 
             foreach (Event e in events)
             {
                 points.Add(new Start(e.StartTime));
                 points.Add(new End(e.EndTime));
             }
-            points.Sort((x, y) => {
+
+            points.Sort((x, y) =>
+            {
                 if (x.Time > y.Time)
                     return 1;
                 if (x.Time < y.Time)
@@ -27,12 +31,20 @@ namespace EPI.C13_Sorting
                 return 1;
             });
 
-            return -1;
-        }
-
-        private int EventComparer(Point x, Point y)
-        {
-            return -1;
+            for (int i = 0; i < points.Count; i++)
+            {
+                if (points[i] is Start)
+                {
+                    roomsInUse++;
+                    if (roomsInUse > maxConcurrentRooms)
+                        maxConcurrentRooms = roomsInUse;
+                }
+                else if (points[i] is End)
+                {
+                    roomsInUse--;
+                }
+            }
+            return maxConcurrentRooms;
         }
 
         private abstract class Point
