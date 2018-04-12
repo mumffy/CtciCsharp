@@ -13,21 +13,25 @@ namespace EPI.C14_Binary_Search_Trees
             //if (tree.Root == null)
             //    return false;
             //return IsBst_Recursive(tree.Root);
+            ////////////////////////////////////////////////////////////////////////
 
-            var inOrderValues = InOrderTraversal(tree);
-            if (inOrderValues == null)
-                return false;
+            //var inOrderValues = InOrderTraversal(tree);
+            //if (inOrderValues == null)
+            //    return false;
 
-            for(int i=0; i<inOrderValues.Count-1; i++)
-            {
-                if (inOrderValues[i].CompareTo(inOrderValues[i + 1]) > 0)
-                    return false;
-            }
+            //for (int i = 0; i < inOrderValues.Count - 1; i++)
+            //{
+            //    if (inOrderValues[i].CompareTo(inOrderValues[i + 1]) > 0)
+            //        return false;
+            //}
 
-            return true;
+            //return true;
+            ////////////////////////////////////////////////////////////////////////
+
+            return InOrderShortCircuited(tree);
         }
 
-        private static bool IsBst_Recursive(Node<T> node)
+        private static bool IsBst_Recursive(Node<T> node) //pre-order
         {
             if (node == null)
                 return true;
@@ -48,7 +52,7 @@ namespace EPI.C14_Binary_Search_Trees
             return InOrderTraversal(tree.Root, new List<T>());
         }
 
-        private static List<T> InOrderTraversal(Node<T> node, List<T> list)
+        private static List<T> InOrderTraversal(Node<T> node, List<T> list) //in-order
         {
             if (node == null)
                 return list;
@@ -58,7 +62,32 @@ namespace EPI.C14_Binary_Search_Trees
             return InOrderTraversal(node.Right, list);
         }
 
+        public static bool InOrderShortCircuited(BinarySearchTree<T> tree)
+        {
+            if (tree.Root == null)
+                return false;
+            return InOrderShortCircuited(tree.Root);
+        }
 
+        private static bool InOrderShortCircuited(Node<T> node) //in-order
+        {
+
+            if (node.Left != null)
+            {
+                if (!InOrderShortCircuited(node.Left))
+                    return false;
+                if (node.Left.Value.CompareTo(node.Value) > 0)
+                    return false;
+            }
+            if (node.Right != null)
+            {
+                if (!InOrderShortCircuited(node.Right))
+                    return false;
+                if (node.Right.Value.CompareTo(node.Value) < 0)
+                    return false;
+            }
+            return true;
+        }
     }
 
     public class C14Q01_Tests
