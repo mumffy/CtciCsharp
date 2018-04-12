@@ -1,6 +1,7 @@
 ﻿using EPI.DataStructures;
 using EPI.DataStructures.BinarySearchTree;
 using System;
+using System.Collections.Generic;
 using Xunit;
 
 namespace EPI.C14_Binary_Search_Trees
@@ -9,12 +10,24 @@ namespace EPI.C14_Binary_Search_Trees
     {
         public static bool IsBst(BinarySearchTree<T> tree)
         {
-            if (tree.Root == null)
+            //if (tree.Root == null)
+            //    return false;
+            //return IsBst_Recursive(tree.Root);
+
+            var inOrderValues = InOrderTraversal(tree);
+            if (inOrderValues == null)
                 return false;
-            return IsBst(tree.Root);
+
+            for(int i=0; i<inOrderValues.Count-1; i++)
+            {
+                if (inOrderValues[i].CompareTo(inOrderValues[i + 1]) > 0)
+                    return false;
+            }
+
+            return true;
         }
 
-        private static bool IsBst(Node<T> node)
+        private static bool IsBst_Recursive(Node<T> node)
         {
             if (node == null)
                 return true;
@@ -25,13 +38,37 @@ namespace EPI.C14_Binary_Search_Trees
             if (node.Right != null && node.Value.CompareTo(node.Right.Value) > 0)
                 return false;
 
-            return IsBst(node.Left) && IsBst(node.Right);
+            return IsBst_Recursive(node.Left) && IsBst_Recursive(node.Right);
         }
+
+        public static List<T> InOrderTraversal(BinarySearchTree<T> tree)
+        {
+            if (tree.Root == null)
+                return null;
+            return InOrderTraversal(tree.Root, new List<T>());
+        }
+
+        private static List<T> InOrderTraversal(Node<T> node, List<T> list)
+        {
+            if (node == null)
+                return list;
+
+            InOrderTraversal(node.Left, list);
+            list.Add(node.Value);
+            return InOrderTraversal(node.Right, list);
+        }
+
+
     }
 
     public class C14Q01_Tests
     {
-        BinarySearchTree<int> tree = new BinarySearchTree<int>();
+        BinarySearchTree<int> tree;
+
+        public C14Q01_Tests()
+        {
+            tree = new BinarySearchTree<int>();
+        }
 
         [Fact]
         public void RootOnly()
