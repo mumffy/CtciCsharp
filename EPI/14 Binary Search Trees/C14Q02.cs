@@ -14,9 +14,53 @@ namespace EPI.C14_Binary_Search_Trees
 
         public static int? FindFirstGreaterKey(BinarySearchTree<int> tree, int target)
         {
-            return FindFirstGreaterKey_Recursive(tree.Root, target);
+            return FindFirstGreaterKey_RecursiveSearch(tree.Root, target)?.FirstGreaterKey;
         }
 
+
+        /// <summary>
+        /// Two (three) possibilities:
+        /// a.  Target is *not* in the BST: traverse to the leaf where target *would* be inserted.
+        ///     The solution is the nearest ancestor whose left subtree contains this leaf position.
+        ///     Could even be the direct parent, if this "new" leaf is its left child.
+        /// b.  Target *is* in the BST and is less than the greatest key.
+        ///     Actually, same case as a., when you encounter the node(s) with equal values, traverse right.
+        /// (c) Target *is* in the BST and *is* the greatest key.
+        ///     No solution, since target already has the greatest key value.
+        ///         
+        /// This approach is better than the "full" in-order traversal done by FindFirstGreaterKey_Recursive(...)
+        /// but it's not "fully" optimal because while it takes advantage of the fact that the solution will "seen"
+        /// when backtracking the path to the leaf back up to the root, it will continue to make more comparisons than
+        /// absolutely necessary.
+        /// 
+        /// A further optimization would be to "find" the nearest ancestor whose left subtree contained this new leaf,
+        /// as described in the two (three) possibilities above.
+        /// </summary>
+        private static Solution FindFirstGreaterKey_RecursiveSearch(Node<int> node, int target)
+        {
+            if (node == null) // this is where the target would be inserted
+                return new Solution();
+
+            Solution s = null;
+            if (node.Value <= target)
+                s = FindFirstGreaterKey_RecursiveSearch(node.Right, target);
+
+            if (node.Value > target)
+                s = FindFirstGreaterKey_RecursiveSearch(node.Left, target);
+
+            if (node.Value > target && (s.FirstGreaterKey == null || s.FirstGreaterKey > node.Value))
+                s.FirstGreaterKey = node.Value;
+
+            return s;
+        }
+
+        private class Solution
+        {
+            public int? FirstGreaterKey;
+        }
+
+        // this uses in-order traversal... should be able to further optimize by skipping the nodes we know will *not* be the answer...
+        //    i.e. take advantage of the BST property and actually "search" for the first greater key...
         private static int? FindFirstGreaterKey_Recursive(Node<int> node, int target)
         {
             if (node == null)
