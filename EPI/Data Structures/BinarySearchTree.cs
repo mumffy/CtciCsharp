@@ -9,5 +9,6 @@ namespace EPI.DataStructures.BinarySearchTree
 {
     public class BinarySearchTree<T> : BinaryTree<T> where T : IComparable
     {
+        public int Count { get; set; }
     }
 }
