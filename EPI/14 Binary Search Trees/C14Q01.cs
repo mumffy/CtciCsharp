@@ -28,7 +28,69 @@ namespace EPI.C14_Binary_Search_Trees
             //return true;
             ////////////////////////////////////////////////////////////////////////
 
-            return InOrderShortCircuited(tree);
+            if (tree.Root == null)
+                return false;
+            return IterativeInOrder(tree.Root);
+        }
+
+        public static bool IterativeInOrder(Node<T> root)
+        {
+            bool firstVisit = true;
+            T lastSeen = default(T);
+            Node<T> node = root;
+            Stack<Node<T>> stack = new Stack<Node<T>>();
+
+            while (node != null || stack.Count > 0)
+            {
+                while (node != null)
+                {
+                    stack.Push(node);
+                    node = node.Left;
+                }
+
+                node = stack.Pop();
+
+                if (firstVisit)
+                {
+                    firstVisit = false;
+                    lastSeen = node.Value;
+                }
+                else
+                {
+                    if (lastSeen.CompareTo(node.Value) > 0)
+                        return false;
+                    lastSeen = node.Value;
+                }
+
+                node = node.Right;
+            }
+
+            return true;
+        }
+
+        public static bool IterativeBst(Node<T> root)
+        {
+            Node<T> node;
+            Queue<Node<T>> q = new Queue<Node<T>>();
+            q.Enqueue(root);
+
+            while (q.Count > 0)
+            {
+                node = q.Dequeue();
+                if (node.Left != null)
+                {
+                    if (node.Left.Value.CompareTo(node.Value) > 0)
+                        return false;
+                    q.Enqueue(node.Left);
+                }
+                if (node.Right != null)
+                {
+                    if (node.Right.Value.CompareTo(node.Value) < 0)
+                        return false;
+                    q.Enqueue(node.Right);
+                }
+            }
+            return true;
         }
 
         private static bool IsBst_Recursive(Node<T> node) //pre-order
