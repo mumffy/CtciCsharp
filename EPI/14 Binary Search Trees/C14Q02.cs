@@ -97,6 +97,7 @@ namespace EPI.C14_Binary_Search_Trees
     public class C14Q02_Tests
     {
         BinarySearchTree<int> exampleTree;
+        public BinarySearchTree<int> ExampleTree => exampleTree;
 
         public C14Q02_Tests()
         {
@@ -114,7 +115,7 @@ namespace EPI.C14_Binary_Search_Trees
             exampleTree.Root.Right.Left = new Node<int>(23);
             exampleTree.Root.Right.Left.Right = new Node<int>(37);
             exampleTree.Root.Right.Left.Right.Left = new Node<int>(29);
-            exampleTree.Root.Right.Left.Right.Left.Right = new Node<int>(32);
+            exampleTree.Root.Right.Left.Right.Left.Right = new Node<int>(31);
             exampleTree.Root.Right.Left.Right.Right = new Node<int>(41);
             exampleTree.Root.Right.Right = new Node<int>(47);
             exampleTree.Root.Right.Right.Right = new Node<int>(53);
