@@ -14,9 +14,26 @@ namespace EPI.C14_Binary_Search_Trees
 
         public static int? FindFirstGreaterKey(BinarySearchTree<int> tree, int target)
         {
-            return FindFirstGreaterKey_RecursiveSearch(tree.Root, target)?.FirstGreaterKey;
+            //return FindFirstGreaterKey_RecursiveSearch(tree.Root, target)?.FirstGreaterKey;
+            return EpiSolution(tree.Root, target, null);
         }
 
+
+        private static int? EpiSolution(Node<int> node, int target, int? bestSoFar)
+        {
+            if (node == null)
+                return bestSoFar;
+
+            if (node.Value > target && (bestSoFar == null || node.Value < bestSoFar))
+            {
+                bestSoFar = node.Value;
+                return EpiSolution(node.Left, target, bestSoFar);
+            }
+            else
+            {
+                return EpiSolution(node.Right, target, bestSoFar);
+            }
+        }
 
         /// <summary>
         /// Two (three) possibilities:
