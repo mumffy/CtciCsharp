@@ -14,22 +14,41 @@ namespace EPI.C14_Binary_Search_Trees
         public static IEnumerable<T> FindKLargest(BinarySearchTree<T> tree, int k)
         {
             // if k > tree.Count throw ...
-            return FindKLargest(tree.Root, k, new List<T>());
+            //return FindKLargest(tree.Root, k, new List<T>());
+
+            list = new List<T>();
+            FindKLargest(tree.Root, k);
+            return list;
         }
 
-        private static IList<T> FindKLargest(Node<T> node, int k, IList<T> list)
+        private static List<T> list = new List<T>();
+
+        private static void FindKLargest(Node<T> node, int k)
         {
-            if (node == null)
-                return list;
+            if (node == null || list.Count == k)
+                return;
 
-            FindKLargest(node.Right, k, list);
-            if (list.Count == k)
-                return list;
-            else
+            FindKLargest(node.Right, k);
+            if (list.Count < k)
+            {
                 list.Add(node.Value);
-
-            return FindKLargest(node.Left, k, list);
+                FindKLargest(node.Left, k);
+            }
         }
+
+        //private static IList<T> FindKLargest(Node<T> node, int k, IList<T> list)
+        //{
+        //    if (node == null)
+        //        return list;
+
+        //    FindKLargest(node.Right, k, list);
+        //    if (list.Count == k)
+        //        return list;
+        //    else
+        //        list.Add(node.Value);
+
+        //    return FindKLargest(node.Left, k, list);
+        //}
     }
 
     public class C14Q03_Tests
