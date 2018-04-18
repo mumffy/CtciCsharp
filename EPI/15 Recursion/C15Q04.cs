@@ -26,15 +26,17 @@ namespace EPI.C15_Recursion
         {
             if (count == array.Length)
             {
-                result.Add(output);
+                result.Add(new HashSet<int>(output));
                 return;
             }
 
-            HashSet<int> h = new HashSet<int>(output);
-            HashSet<int> j = new HashSet<int>(output);
-            h.Add(array[count]);
-            FindPowerSet(count + 1, h);
-            FindPowerSet(count + 1, j);
+            //without array[count] in the answer being generated
+            FindPowerSet(count + 1, output);
+
+            //with array[count] in the answer
+            output.Add(array[count]);
+            FindPowerSet(count + 1, output);
+            output.Remove(array[count]);
         }
     }
 
@@ -45,14 +47,14 @@ namespace EPI.C15_Recursion
         {
             var result = new Q04().FindPowerSet(new HashSet<int> { 0, 1, 2 });
             Assert.Equal(8, result.Count);
-            Assert.True(result.Where(x => x.SequenceEqual(new HashSet<int> { })).Any());
-            Assert.True(result.Where(x => x.SequenceEqual(new HashSet<int> { 0 })).Any());
-            Assert.True(result.Where(x => x.SequenceEqual(new HashSet<int> { 1 })).Any());
-            Assert.True(result.Where(x => x.SequenceEqual(new HashSet<int> { 2 })).Any());
-            Assert.True(result.Where(x => x.SequenceEqual(new HashSet<int> { 0, 1 })).Any());
-            Assert.True(result.Where(x => x.SequenceEqual(new HashSet<int> { 0, 2 })).Any());
-            Assert.True(result.Where(x => x.SequenceEqual(new HashSet<int> { 1, 2 })).Any());
-            Assert.True(result.Where(x => x.SequenceEqual(new HashSet<int> { 0, 1, 2 })).Any());
+            Assert.True(result.Where(x => x.SetEquals(new HashSet<int> { })).Any());
+            Assert.True(result.Where(x => x.SetEquals(new HashSet<int> { 0 })).Any());
+            Assert.True(result.Where(x => x.SetEquals(new HashSet<int> { 1 })).Any());
+            Assert.True(result.Where(x => x.SetEquals(new HashSet<int> { 2 })).Any());
+            Assert.True(result.Where(x => x.SetEquals(new HashSet<int> { 0, 1 })).Any());
+            Assert.True(result.Where(x => x.SetEquals(new HashSet<int> { 0, 2 })).Any());
+            Assert.True(result.Where(x => x.SetEquals(new HashSet<int> { 1, 2 })).Any());
+            Assert.True(result.Where(x => x.SetEquals(new HashSet<int> { 0, 1, 2 })).Any());
         }
     }
 
