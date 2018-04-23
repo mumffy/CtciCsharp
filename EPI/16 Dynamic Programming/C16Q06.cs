@@ -53,7 +53,7 @@ namespace EPI.C16_Dynamic_Programming
     public class C16Q06_Tests
     {
         [TestMethod]
-        public void Example()
+        public void Example02()
         {
             Item[] items = new Item[] {
                 new Item(60, 5),
@@ -62,6 +62,30 @@ namespace EPI.C16_Dynamic_Programming
                 new Item(30, 2),
             };
             Assert.AreEqual(80, Q06.FindMaxValueWithinConstraint(items, 5));
+        }
+
+        [TestMethod]
+        public void Example01()
+        {
+            Item[] items = new Item[] {
+                new Item(65, 20),
+                new Item(35, 8),
+                new Item(245, 60),
+                new Item(195, 55),
+                new Item(65, 40),
+                new Item(150, 70),
+                new Item(275, 85),
+                new Item(155, 25), //08
+                new Item(120, 30),
+                new Item(320, 65),
+                new Item(75, 75),
+                new Item(40, 10),
+                new Item(200, 95),
+                new Item(100, 50),
+                new Item(220, 40),
+                new Item(99, 10), //16
+            };
+            Assert.AreEqual(695, Q06.FindMaxValueWithinConstraint(items, 130));
         }
     }
 }
