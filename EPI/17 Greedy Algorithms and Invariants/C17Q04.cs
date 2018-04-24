@@ -11,13 +11,45 @@ namespace EPI.C17_Greedy_Algorithms_and_Invariants
     {
         public static bool HasThreeSum(int[] array, int target)
         {
+            return HasThreeSum_WithInvariant(array, target);
+        }
+
+        private static bool HasThreeSum_WithInvariant(int[] array, int target)
+        {
+            int remaining, low, high, sum;
+            int[] a = new int[array.Length];
+            Array.Copy(array, a, array.Length);
+            Array.Sort(a);
+
+            foreach (int x in a)
+            {
+                remaining = target - x;
+                low = 0;
+                high = a.Length - 1;
+                while (low <= high)
+                {
+                    sum = x + a[low] + a[high];
+                    if (sum == target)
+                        return true;
+                    else if (sum < target)
+                        low++;
+                    else // sum > target
+                        high--;
+                }
+            }
+
+            return false;
+        }
+
+        private static bool HasThreeSum_WithHashtable(int[] array, int target)
+        {
             HashSet<int> numbers = new HashSet<int>(array);
             int remaining;
 
             foreach (int x in array)
             {
                 remaining = target - x;
-                foreach(int y in array)
+                foreach (int y in array)
                     if (numbers.Contains(remaining - y))
                         return true;
             }
