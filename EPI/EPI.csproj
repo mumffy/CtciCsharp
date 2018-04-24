@@ -112,6 +112,7 @@
     <Compile Include="16 Dynamic Programming\C16Q03.cs" />
     <Compile Include="16 Dynamic Programming\C16Q02.cs" />
     <Compile Include="16 Dynamic Programming\C16Q01.cs" />
+    <Compile Include="17 Greedy Algorithms and Invariants\C17Q04.cs" />
     <Compile Include="Data Structures\BinarySearchTree.cs" />
     <Compile Include="Data Structures\BinaryTree.cs" />
     <Compile Include="Data Structures\LinkedList.cs" />
