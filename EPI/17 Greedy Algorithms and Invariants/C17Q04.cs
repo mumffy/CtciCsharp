@@ -78,5 +78,20 @@ namespace EPI.C17_Greedy_Algorithms_and_Invariants
         {
             Assert.IsFalse(Q04.HasThreeSum(exampleArray, 22));
         }
+
+        [TestMethod]
+        public void TargetRequiresRepeats()
+        {
+            Assert.IsTrue(Q04.HasThreeSum(new int[] { 1, 7, 9 }, 21));
+            Assert.IsTrue(Q04.HasThreeSum(new int[] { 1, 7, 9 }, 27));
+            Assert.IsTrue(Q04.HasThreeSum(new int[] { 1, 7, 9 }, 3));
+        }
+
+        [TestMethod]
+        public void TargetIsGreaterThanMaxOrLessThanMin()
+        {
+            Assert.IsFalse(Q04.HasThreeSum(new int[] { 1, 7, 9 }, 10));
+            Assert.IsFalse(Q04.HasThreeSum(new int[] { 1, 7, 9 }, 0));
+        }
     }
 }
