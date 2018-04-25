@@ -133,11 +133,6 @@ namespace EPI.C18_Graphs
             return sb.ToString();
         }
 
-        public void UpdateEncodedMazeWithPath(string[] maze, int x, int y)
-        {
-            //maze[x][y] = 'O';
-        }
-
         [TestMethod]
         public void MazeIs10by10()
         {
