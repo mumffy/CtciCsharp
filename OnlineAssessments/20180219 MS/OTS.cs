@@ -1,6 +1,7 @@
 ﻿using System;
 using EPI.DataStructures.LinkedList;
 using Xunit;
+using System.Collections.Generic;
 
 namespace Online
 {
@@ -61,6 +62,54 @@ namespace Online
             }
             return current;
         }
+
+        public static Node<int> LinkedListSumUsingStacks(LinkedListInteger aLL, LinkedListInteger bLL)
+        {
+            Node<int> newHead, result = null;
+            Node<int> a = aLL.Head, b = bLL.Head;
+            Stack<int> aStack = new Stack<int>();
+            Stack<int> bStack = new Stack<int>();
+            Stack<int> leftovers = null;
+            int sum, carry = 0;
+
+            while (a != null)
+            {
+                aStack.Push(a.Value);
+                a = a.Next;
+            }
+            while (b != null)
+            {
+                bStack.Push(b.Value);
+                b = b.Next;
+            }
+
+            int aValue;
+            int bValue;
+            // LIFO will cause A and B's least significant digits to be pop out first
+            while (aStack.Count > 0 || bStack.Count > 0 || carry > 0)
+            {
+                aValue = 0;
+                bValue = 0;
+
+                try {
+                    aValue = aStack.Pop();
+                }
+                catch (InvalidOperationException ex) { }
+                try
+                {
+                    bValue = bStack.Pop();
+                }
+                catch (InvalidOperationException ex) { }
+
+                sum = aValue + bValue + carry;
+                newHead = new Node<int>(sum % 10, result);
+                result = newHead;
+
+                carry = sum / 10;
+            }
+
+            return result;
+        }
     }
 
     public class Tests
@@ -90,7 +139,7 @@ namespace Online
             b.Head = new Node<int>(3);
             b.Head.Next = new Node<int>(4);
 
-            
+
             var sum = OTS.LinkedListSum(a, b);
             LinkedListInteger s = new LinkedListInteger { Head = sum };
             Assert.Equal(46, s.ToInt());
@@ -129,14 +178,55 @@ namespace Online
             Assert.Equal(10005, s.ToInt());
         }
 
-        private LinkedListInteger GetLinkedListIntege(int i)
+        [Fact]
+        public void Stack_Basic_Sum01()
         {
-            LinkedListInteger list = new LinkedListInteger();
+            LinkedListInteger a = new LinkedListInteger();
+            a.Head = new Node<int>(1);
+            a.Head.Next = new Node<int>(2);
+            LinkedListInteger b = new LinkedListInteger();
+            b.Head = new Node<int>(3);
+            b.Head.Next = new Node<int>(4);
 
 
-
-            return list;
+            var sum = OTS.LinkedListSumUsingStacks(a, b);
+            LinkedListInteger s = new LinkedListInteger { Head = sum };
+            Assert.Equal(46, s.ToInt());
         }
+
+        [Fact]
+        public void Stack_Carry_Sum01()
+        {
+            LinkedListInteger a = new LinkedListInteger();
+            a.Head = new Node<int>(1);
+            a.Head.Next = new Node<int>(2);
+            LinkedListInteger b = new LinkedListInteger();
+            b.Head = new Node<int>(8);
+
+
+            var sum = OTS.LinkedListSumUsingStacks(a, b);
+            LinkedListInteger s = new LinkedListInteger { Head = sum };
+            Assert.Equal(20, s.ToInt());
+        }
+
+
+        [Fact]
+        public void Stack_Carry_Sum02()
+        {
+            LinkedListInteger a = new LinkedListInteger();
+            a.Head = new Node<int>(9);
+            a.Head.Next = new Node<int>(9);
+            a.Head.Next.Next = new Node<int>(9);
+            a.Head.Next.Next.Next = new Node<int>(9);
+            LinkedListInteger b = new LinkedListInteger();
+            b.Head = new Node<int>(6);
+
+
+            var sum = OTS.LinkedListSumUsingStacks(a, b);
+            LinkedListInteger s = new LinkedListInteger { Head = sum };
+            Assert.Equal(10005, s.ToInt());
+        }
+
 
     }
 }
