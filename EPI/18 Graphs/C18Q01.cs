@@ -93,28 +93,41 @@ namespace EPI.C18_Graphs
                 ".......XX."
             };
 
-            exampleMaze = new bool?[10, 10];
-            for (int x = 0; x < encodedMaze.Length; x++)
-            {
-                for (int y = 0; y < encodedMaze[x].Length; y++)
-                {
-                    if (encodedMaze[x][y] == '.')
-                        exampleMaze[x, y] = null;
-                    else
-                        exampleMaze[x, y] = false;
-                }
-            }
+            exampleMaze = GetGridFromEncoded(encodedMaze);
         }
 
-        public static string MazeToString(bool?[,] maze)
+        public static bool?[,] GetGridFromEncoded(string[] encoded)
+        {
+            bool?[,] grid = new bool?[encoded.Length, encoded[0].Length];
+            for (int x = 0; x < encoded.Length; x++)
+            {
+                for (int y = 0; y < encoded[x].Length; y++)
+                {
+                    if (encoded[x][y] == '.')
+                        grid[x, y] = null;
+                    else
+                        grid[x, y] = false;
+                }
+            }
+            return grid;
+        }
+
+        public static string MazeToString(bool?[,] maze, bool withBorder = true)
         {
             StringBuilder sb = new StringBuilder();
-            for (int i = 0; i < maze.GetLength(1) + 2; i++)
-                sb.Append('█');
-            sb.AppendLine();
+
+            if (withBorder)
+            {
+                for (int i = 0; i < maze.GetLength(1) + 2; i++)
+                    sb.Append('█');
+                sb.AppendLine();
+            }
+
             for (int x = 0; x < maze.GetLength(0); x++)
             {
-                sb.Append('█');
+                if (withBorder)
+                    sb.Append('█');
+
                 for (int y = 0; y < maze.GetLength(1); y++)
                 {
                     if (maze[x, y] == null)
@@ -124,12 +137,20 @@ namespace EPI.C18_Graphs
                     else
                         sb.Append('·');
                 }
-                sb.Append('█');
+
+                if (withBorder)
+                    sb.Append('█');
+
                 sb.AppendLine();
             }
-            for (int i = 0; i < maze.GetLength(1) + 2; i++)
-                sb.Append('█');
-            sb.AppendLine();
+
+            if (withBorder)
+            {
+                for (int i = 0; i < maze.GetLength(1) + 2; i++)
+                    sb.Append('█');
+                sb.AppendLine();
+            }
+
             return sb.ToString();
         }
 
@@ -163,7 +184,7 @@ namespace EPI.C18_Graphs
 
             Q01.PathNode pathNode = reversePath[0];
 
-            while(pathNode != null)
+            while (pathNode != null)
             {
                 mazeCopy[pathNode.Node.X, pathNode.Node.Y] = true;
                 pathNode = pathNode.Previous;
